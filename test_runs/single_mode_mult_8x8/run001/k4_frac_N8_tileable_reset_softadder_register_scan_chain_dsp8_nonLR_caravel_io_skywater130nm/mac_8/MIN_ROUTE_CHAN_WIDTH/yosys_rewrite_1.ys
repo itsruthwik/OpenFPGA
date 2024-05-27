@@ -1,0 +1,4 @@
+# Rewrite the .blif to Verilog
+# so that the pin sequence matches
+read_blif rewritten_mac_8_yosys_out.blif
+write_verilog mac_8_output_verilog.v

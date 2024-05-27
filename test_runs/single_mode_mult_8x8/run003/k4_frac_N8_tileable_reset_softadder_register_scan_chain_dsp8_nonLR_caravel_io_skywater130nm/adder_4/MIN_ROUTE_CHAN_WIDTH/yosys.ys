@@ -1,0 +1,97 @@
+# Yosys synthesis script for adder_4
+
+#########################
+# Parse input files
+#########################
+# Read verilog files
+read_verilog -nolatches ./benchmark/adder_4.v
+# Read technology library
+read_verilog -lib -specify /home/rsunketa/OpenFPGA/openfpga_flow/openfpga_yosys_techlib/k4_frac_N8_tileable_reset_softadder_register_scan_chain_dsp8_nonLR_caravel_io_skywater130nm_cell_sim.v
+
+#########################
+# Prepare for synthesis
+#########################
+# Identify top module from hierarchy
+hierarchy -check -top adder_4
+# - Convert process blocks to AST
+proc
+# Flatten all the gates/primitives
+flatten
+# Identify tri-state buffers from 'z' signal in AST
+# with follow-up optimizations to clean up AST
+tribuf -logic
+opt_expr
+opt_clean
+# demote inout ports to input or output port
+# with follow-up optimizations to clean up AST
+deminout
+opt -nodffe -nosdff
+
+opt_expr
+opt_clean
+check
+opt -nodffe -nosdff
+wreduce -keepdc
+peepopt
+pmuxtree
+opt_clean
+
+########################
+# Map multipliers
+# Inspired from synth_xilinx.cc
+#########################
+# Avoid merging any registers into DSP, reserve memory port registers first
+memory_dff
+wreduce t:$mul
+techmap -map +/mul2dsp.v -map /home/rsunketa/OpenFPGA/openfpga_flow/openfpga_yosys_techlib/k4_frac_N8_tileable_reset_softadder_register_scan_chain_dsp8_nonLR_caravel_io_skywater130nm_dsp_map.v -D DSP_A_MAXWIDTH=8 -D DSP_B_MAXWIDTH=8 -D DSP_A_MINWIDTH=2 -D DSP_B_MINWIDTH=2 -D DSP_NAME=mult_8x8
+select a:mul2dsp
+setattr -unset mul2dsp
+opt_expr -fine
+wreduce
+select -clear
+chtype -set $mul t:$__soft_mul# Extract arithmetic functions
+
+#########################
+# Run coarse synthesis
+#########################
+# Run a tech map with default library
+techmap
+alumacc
+share
+opt -nodffe -nosdff
+fsm
+# Run a quick follow-up optimization to sweep out unused nets/signals
+opt -fast -nodffe -nosdff
+# Optimize any memory cells by merging share-able ports and collecting all the ports belonging to memorcy cells  
+memory -nomap
+opt_clean
+
+#########################
+# Map flip-flops
+#########################
+dfflegalize -cell $_DFF_P_ 0
+techmap -map +/adff2dff.v
+opt_expr -mux_undef
+simplemap
+opt_expr
+opt_merge
+opt_dff -nodffe -nosdff
+opt_clean
+opt -nodffe -nosdff
+
+#########################
+# Map LUTs
+#########################
+abc -lut 4
+
+#########################
+# Check and show statisitics
+#########################
+hierarchy -check
+stat
+
+#########################
+# Output netlists
+#########################
+opt_clean -purge
+write_blif -param adder_4_yosys_out.blif

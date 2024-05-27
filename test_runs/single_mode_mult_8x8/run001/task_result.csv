@@ -1,0 +1,5 @@
+name,TotalRunTime,average_net_length,clb_blocks,critical_path,io_blocks,packing_time,placement_time,routing_time,total_logic_block_area,total_routing_area,total_routing_time,total_wire_length
+00_mac_2_MIN_ROUTE_CHAN_WIDTH,4,6.36364,1,5.59707e-09,8,0.01,0.00,0.09,449894,20418.9,0.09,70
+00_mac_4_MIN_ROUTE_CHAN_WIDTH,4,8.86957,1,6.7702600000000006e-09,16,0.01,0.00,0.09,449894,24904.1,0.09,204
+00_mac_6_MIN_ROUTE_CHAN_WIDTH,7,8.66667,2,7.55927e-09,24,0.01,0.01,0.35,503788,33407.1,0.35,312
+00_mac_8_MIN_ROUTE_CHAN_WIDTH,7,10.8723,2,8.748810000000002e-09,32,0.01,0.01,0.48,503788,37724.0,0.48,511

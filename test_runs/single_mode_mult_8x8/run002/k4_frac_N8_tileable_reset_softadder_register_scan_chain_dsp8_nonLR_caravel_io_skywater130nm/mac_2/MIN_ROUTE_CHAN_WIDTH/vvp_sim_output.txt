@@ -1,0 +1,5 @@
+vvp compiled_mac_2
+VCD info: dumpfile mac_2_formal.vcd opened for output.
+Simulation start
+Simulation Succeed
+0

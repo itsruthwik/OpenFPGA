@@ -1,0 +1,30 @@
+<!-- Netlist naming fix-up report --> 
+<netlist>
+	<blocks>
+		<block previous="a[0]" current="a_0_"/>
+		<block previous="a[1]" current="a_1_"/>
+		<block previous="b[0]" current="b_0_"/>
+		<block previous="b[1]" current="b_1_"/>
+		<block previous="c[0]" current="c_0_"/>
+		<block previous="c[1]" current="c_1_"/>
+		<block previous="out:out[0]" current="out_out_0_"/>
+		<block previous="out:out[1]" current="out_out_1_"/>
+		<block previous="$false" current="_false"/>
+		<block previous="out[1]" current="out_1_"/>
+		<block previous="out[0]" current="out_0_"/>
+		<block previous="$techmap$add$./benchmark/mac_2.v:11$2.$auto$alumacc.cc:485:replace_alu$82.B[0]" current="_techmap_add___benchmark_mac_2_v_11_2__auto_alumacc_cc_485_replace_alu_82_B_0_"/>
+	</blocks>
+	<nets>
+		<net previous="a[0]" current="a_0_"/>
+		<net previous="a[1]" current="a_1_"/>
+		<net previous="b[0]" current="b_0_"/>
+		<net previous="b[1]" current="b_1_"/>
+		<net previous="c[0]" current="c_0_"/>
+		<net previous="c[1]" current="c_1_"/>
+		<net previous="out[0]" current="out_0_"/>
+		<net previous="out[1]" current="out_1_"/>
+		<net previous="$false" current="_false"/>
+		<net previous="$techmap$add$./benchmark/mac_2.v:11$2.$auto$alumacc.cc:485:replace_alu$82.B[1]" current="_techmap_add___benchmark_mac_2_v_11_2__auto_alumacc_cc_485_replace_alu_82_B_1_"/>
+		<net previous="$techmap$add$./benchmark/mac_2.v:11$2.$auto$alumacc.cc:485:replace_alu$82.B[0]" current="_techmap_add___benchmark_mac_2_v_11_2__auto_alumacc_cc_485_replace_alu_82_B_0_"/>
+	</nets>
+</netlist>

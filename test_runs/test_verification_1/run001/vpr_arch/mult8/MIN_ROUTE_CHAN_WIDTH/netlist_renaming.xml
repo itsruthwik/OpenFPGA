@@ -1,0 +1,24 @@
+<!-- Netlist naming fix-up report --> 
+<netlist>
+	<blocks>
+		<block previous="out:out_0" current="out_out_0"/>
+		<block previous="out:out_1" current="out_out_1"/>
+		<block previous="out:out_2" current="out_out_2"/>
+		<block previous="out:out_3" current="out_out_3"/>
+		<block previous="out:out_4" current="out_out_4"/>
+		<block previous="out:out_5" current="out_out_5"/>
+		<block previous="out:out_6" current="out_out_6"/>
+		<block previous="out:out_7" current="out_out_7"/>
+		<block previous="out:out_8" current="out_out_8"/>
+		<block previous="out:out_9" current="out_out_9"/>
+		<block previous="out:out_10" current="out_out_10"/>
+		<block previous="out:out_11" current="out_out_11"/>
+		<block previous="out:out_12" current="out_out_12"/>
+		<block previous="out:out_13" current="out_out_13"/>
+		<block previous="out:out_14" current="out_out_14"/>
+		<block previous="out:out_15" current="out_out_15"/>
+		<block previous="$undef" current="_undef"/>
+	</blocks>
+	<nets>
+	</nets>
+</netlist>

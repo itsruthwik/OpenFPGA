@@ -1,0 +1,2 @@
+iverilog -o compiled_adder_4 ./SRC/adder_4_include_netlists.v -s adder_4_top_formal_verification_random_tb -I ./SRC
+0
