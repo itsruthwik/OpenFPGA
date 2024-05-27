@@ -1,0 +1,25 @@
+<!-- Netlist naming fix-up report --> 
+<netlist>
+	<blocks>
+		<block previous="a[0]" current="a_0_"/>
+		<block previous="a[1]" current="a_1_"/>
+		<block previous="b[0]" current="b_0_"/>
+		<block previous="b[1]" current="b_1_"/>
+		<block previous="c[0]" current="c_0_"/>
+		<block previous="c[1]" current="c_1_"/>
+		<block previous="out:out[0]" current="out_out_0_"/>
+		<block previous="out:out[1]" current="out_out_1_"/>
+		<block previous="out[1]" current="out_1_"/>
+		<block previous="out[0]" current="out_0_"/>
+	</blocks>
+	<nets>
+		<net previous="a[0]" current="a_0_"/>
+		<net previous="a[1]" current="a_1_"/>
+		<net previous="b[0]" current="b_0_"/>
+		<net previous="b[1]" current="b_1_"/>
+		<net previous="c[0]" current="c_0_"/>
+		<net previous="c[1]" current="c_1_"/>
+		<net previous="out[0]" current="out_0_"/>
+		<net previous="out[1]" current="out_1_"/>
+	</nets>
+</netlist>
