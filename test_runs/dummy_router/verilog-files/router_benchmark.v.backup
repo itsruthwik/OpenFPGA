@@ -1,0 +1,52 @@
+module router_benchmark(    
+    input clk,  
+    // input reset,  
+    input [0:3] ROUTER_ADDRESS,
+    input [0:67] CHANNEL_IN_IP, 
+    input [0:1] FLOW_CTRL_IN_OP,
+
+    output ERROR,
+    
+    output [0:67] CHANNEL_OUT_OP,
+
+    output [0:1] FLOW_CTRL_OUT_IP,
+
+);   
+
+    // wire [0:3] ROUTER_ADDRESS;
+    // wire [0:67] CHANNEL_IN_IP; 
+    // wire [0:1] FLOW_CTRL_IN_OP;
+
+    // assign ROUTER_ADDRESS = 0;
+    // assign CHANNEL_IN_IP = 1;
+    // assign FLOW_CTRL_IN_OP = 1;
+
+router router1      
+    (.clk(clk),
+    // .reset(reset),
+    .ROUTER_ADDRESS(ROUTER_ADDRESS),
+    .CHANNEL_IN_IP(CHANNEL_IN_IP),
+    .FLOW_CTRL_IN_OP(FLOW_CTRL_IN_OP),
+    .CHANNEL_OUT_OP(CHANNEL_OUT_OP),
+    .FLOW_CTRL_OUT_IP(FLOW_CTRL_OUT_IP),
+    .ERROR(ERROR)
+    );
+
+    // always @(posedge clk) begin
+    //     if (reset) begin
+    //         ERROR <= 0 ;
+    //         CHANNEL_OUT_OP <= 0 ;
+    //         FLOW_CTRL_OUT_IP <= 0 ;
+    //     end else if begin
+    //         ERROR <= 1 ;
+    //         CHANNEL_OUT_OP <= 1 ;
+    //         FLOW_CTRL_OUT_IP <= 1 ;
+    //     end
+    // end
+
+
+endmodule
+
+
+
+
