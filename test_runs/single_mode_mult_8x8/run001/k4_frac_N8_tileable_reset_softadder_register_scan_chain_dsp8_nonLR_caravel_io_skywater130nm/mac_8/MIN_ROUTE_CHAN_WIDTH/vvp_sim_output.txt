@@ -1,5 +1,0 @@
-vvp compiled_mac_8
-VCD info: dumpfile mac_8_formal.vcd opened for output.
-Simulation start
-Simulation Succeed
-0

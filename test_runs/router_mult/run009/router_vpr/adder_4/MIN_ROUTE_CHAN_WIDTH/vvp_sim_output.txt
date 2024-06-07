@@ -1,5 +1,0 @@
-vvp compiled_adder_4
-VCD info: dumpfile adder_4_formal.vcd opened for output.
-Simulation start
-Simulation Succeed
-0

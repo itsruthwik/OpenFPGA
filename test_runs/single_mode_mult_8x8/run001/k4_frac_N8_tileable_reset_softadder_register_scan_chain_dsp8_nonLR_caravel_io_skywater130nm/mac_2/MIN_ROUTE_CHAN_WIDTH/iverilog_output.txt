@@ -1,2 +1,0 @@
-iverilog -o compiled_mac_2 ./SRC/mac_2_include_netlists.v -s mac_2_top_formal_verification_random_tb -I ./SRC
-0

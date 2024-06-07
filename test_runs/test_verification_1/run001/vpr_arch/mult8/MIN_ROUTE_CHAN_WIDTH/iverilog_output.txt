@@ -1,2 +1,0 @@
-iverilog -o compiled_mult8 ./SRC/mult8_include_netlists.v -s mult8_top_formal_verification_random_tb -I ./SRC
-0
