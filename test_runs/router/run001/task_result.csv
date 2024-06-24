@@ -1,0 +1,2 @@
+name,TotalRunTime,average_net_length,clb_blocks,critical_path,io_blocks,packing_time,placement_time,routing_time,total_routing_area,total_routing_time,total_wire_length
+00_router_tb_MIN_ROUTE_CHAN_WIDTH,336,26.9407,0,3.2738500000000002e-09,709,0.17,0.88,158.04,1.34875e+07,158.04,19074
