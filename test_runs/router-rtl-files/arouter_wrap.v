@@ -29,7 +29,7 @@
 // wrapper around router component (configures router parameters based on
 // selected network topology, etc.)
 //==============================================================================
-
+(* whitebox *)
 module router_wrap
   (clk, reset, router_address, channel_in_ip, flow_ctrl_out_ip, channel_out_op, 
    flow_ctrl_in_op, error);
