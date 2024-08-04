@@ -43,7 +43,5 @@ synth -run check
 # Clean and output blif
 opt_clean -purge
 
-#rename -hide */c:*[*; rename -enumerate -pattern bracket_% */c:$auto$rename*
-
 write_verilog ${OUTPUT_VERILOG}
 write_blif rewritten_${OUTPUT_BLIF}

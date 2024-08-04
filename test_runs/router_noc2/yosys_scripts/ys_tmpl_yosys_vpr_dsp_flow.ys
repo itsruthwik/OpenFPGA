@@ -4,24 +4,24 @@
 # Parse input files
 #########################
 # Read verilog files
-
-#read_verilog ${VERILOG_FILES}
-read_verilog /home/rsunketa/OpenFPGA/test_runs/router-rtl-files/testbench1/router_tb-dummy.v
+read_verilog ${VERILOG_FILES}
 # Read technology library
-#read_verilog -lib -specify ${YOSYS_CELL_SIM_VERILOG}
-read_verilog -lib -specify /home/rsunketa/OpenFPGA/test_runs/router-rtl-files/op/router_wrap.v
-read_verilog -lib -specify /home/rsunketa/OpenFPGA/test_runs/router-rtl-files/op/router_wrap_flattened_output-copy.v
+read_verilog -lib -specify ${YOSYS_CELL_SIM_VERILOG}
+
+read_verilog -lib -specify /home/rsunketa/OpenFPGA/test_runs/nocgen/src/*v
+
 #########################
 # Prepare for synthesis
 #########################
 # Identify top module from hierarchy
 hierarchy -check -top ${TOP_MODULE}
 
+techmap -map /home/rsunketa/OpenFPGA/test_runs/router_noc/verilog-files/router2router_slice.v -max_iter 5
 
 # - Convert process blocks to AST
 proc
 # Flatten all the gates/primitives
-flatten 
+flatten
 # Identify tri-state buffers from 'z' signal in AST
 # with follow-up optimizations to clean up AST
 tribuf -logic
@@ -56,7 +56,7 @@ opt_clean
 #select -clear
 #chtype -set $mul t:$__soft_mul# Extract arithmetic functions
 
-techmap -map /home/rsunketa/OpenFPGA/test_runs/router/verilog-files/router2router_slice-copy.v -max_iter 3 
+
 
 #########################
 # Run coarse synthesis
@@ -76,7 +76,7 @@ opt_clean
 #########################
 # Map flip-flops
 #########################
-#dfflegalize -cell $_DFF_P_ 0
+dfflegalize -cell $_DFF_P_ 0
 techmap -map +/adff2dff.v
 opt_expr -mux_undef
 simplemap
@@ -94,7 +94,7 @@ abc -lut ${LUT_SIZE}
 #########################
 # Check and show statisitics
 #########################
-#hierarchy -check
+hierarchy -check
 stat
 
 #########################
@@ -103,4 +103,3 @@ stat
 opt_clean -purge
 
 write_blif -param ${OUTPUT_BLIF}
-

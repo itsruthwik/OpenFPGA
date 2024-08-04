@@ -4,7 +4,7 @@
 # Parse input files
 #########################
 # Read verilog files
-read_verilog ${READ_VERILOG_OPTIONS} ${VERILOG_FILES}
+read_verilog ${VERILOG_FILES}
 # Read technology library
 read_verilog -lib -specify ${YOSYS_CELL_SIM_VERILOG}
 
@@ -14,8 +14,7 @@ read_verilog -lib -specify ${YOSYS_CELL_SIM_VERILOG}
 # Identify top module from hierarchy
 hierarchy -check -top ${TOP_MODULE}
 
-techmap -map /home/rsunketa/OpenFPGA/test_runs/router_noc2/verilog-files/router2router_slice.v -max_iter 5
-
+techmap -map /home/rsunketa/OpenFPGA/test_runs/router_noc/verilog-files/router2router_slice.v -max_iter 5
 
 # - Convert process blocks to AST
 proc
@@ -56,6 +55,7 @@ opt_clean
 #chtype -set $mul t:$__soft_mul# Extract arithmetic functions
 
 
+
 #########################
 # Run coarse synthesis
 #########################
@@ -92,7 +92,7 @@ abc -lut ${LUT_SIZE}
 #########################
 # Check and show statisitics
 #########################
-#hierarchy -check
+hierarchy -check
 stat
 
 #########################

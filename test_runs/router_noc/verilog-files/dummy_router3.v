@@ -1,4 +1,5 @@
-module router_wrap(
+(* whitebox *)
+module router(
 
 input   [34:0] IDATA_0,
 input              IVALID_0, 

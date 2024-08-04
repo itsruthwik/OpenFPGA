@@ -62,43 +62,7 @@ input    clk ,
 input    RST_    );
 
 
-// parameter       ROUTERID = 0;
-
   always @(posedge clk ) begin
-    // if (RST_) begin
-    // if (RST_ == 0) begin
-
-    //   ODATA_0 <=  0 ;
-    //   OVALID_0 <=  0 ;
-    //   OVCH_0 <=  0 ;
-    //   ODATA_1 <=  0 ;
-    //   OVALID_1 <=  0 ;
-    //   OVCH_1 <=  0 ;
-    //   ODATA_2 <=  0 ;
-    //   OVALID_2 <=  0 ;
-    //   OVCH_2 <=  0 ;
-    //   ODATA_3 <=  0 ;
-    //   OVALID_3 <=  0 ;
-    //   OVCH_3 <=  0 ;
-    //   ODATA_4 <=  0 ;
-    //   OVALID_4 <=  0 ;
-    //   OVCH_4 <=  0 ;
-    //   OACK_0 <= 0 ;
-    //   ORDY_0 <= 0 ;
-    //   OLCK_0 <= 0 ;
-    //   OACK_1 <= 0 ;
-    //   ORDY_1 <= 0 ;
-    //   OLCK_1 <= 0 ;
-    //   OACK_2 <= 0 ;
-    //   ORDY_2 <= 0 ;
-    //   OLCK_2 <= 0 ;
-    //   OACK_3 <= 0 ;
-    //   ORDY_3 <= 0 ;
-    //   OLCK_3 <= 0 ;
-    //   OACK_4 <= 0 ;
-    //   ORDY_4 <= 0 ;
-    //   OLCK_4 <= 0 ;
-    // end
 
     ODATA_0 <=  IDATA_0 ;
     OVALID_0 <=  IVALID_0 ;
@@ -134,18 +98,16 @@ input    RST_    );
 
     OACK_3 <= IACK_3 ;
     // ORDY_3 <= ILCK_3 ;
-    ORDY_3 <= MY_XPOS + MY_YPOS ;
+    ORDY_3 <= MY_XPOS ;
 
     OLCK_3 <= ILCK_3 ;
 
     OACK_4 <= IACK_4 ;
-    ORDY_4 <= ILCK_4 ;
-    OLCK_4 <= ILCK_4 + RST_ ;
+
+    ORDY_4 <= MY_YPOS ;
+    
+    OLCK_4 <= ILCK_4 ;
 
   end
 
 endmodule
-
- 
-
-

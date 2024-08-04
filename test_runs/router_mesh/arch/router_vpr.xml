@@ -112,53 +112,53 @@
         <input name="reset" num_pins="1"/> 
         <output name="error" num_pins="1"/>
 
-        <input name="router_address" num_pins="6"/>
+        <input name="router_address" num_pins="4"/>
 
-        <input name="channel_in_ip_0" num_pins="68"/>
-        <input name="channel_in_ip_1" num_pins="68"/>
-        <input name="channel_in_ip_2" num_pins="68"/>
-        <input name="channel_in_ip_3" num_pins="68"/>
-        <input name="channel_in_ip_4" num_pins="68"/>
+        <input name="channel_in_ip_0" num_pins="70"/>
+        <input name="channel_in_ip_1" num_pins="70"/>
+        <input name="channel_in_ip_2" num_pins="70"/>
+        <input name="channel_in_ip_3" num_pins="70"/>
+        <input name="channel_in_ip_4" num_pins="70"/>
 
-        <input name="flow_ctrl_in_op_0" num_pins="2"/>
-        <input name="flow_ctrl_in_op_1" num_pins="2"/>
-        <input name="flow_ctrl_in_op_2" num_pins="2"/>
-        <input name="flow_ctrl_in_op_3" num_pins="2"/>
-        <input name="flow_ctrl_in_op_4" num_pins="2"/>
+        <input name="flow_ctrl_in_op_0" num_pins="3"/>
+        <input name="flow_ctrl_in_op_1" num_pins="3"/>
+        <input name="flow_ctrl_in_op_2" num_pins="3"/>
+        <input name="flow_ctrl_in_op_3" num_pins="3"/>
+        <input name="flow_ctrl_in_op_4" num_pins="3"/>
 
-        <output name="channel_out_op_0" num_pins="68"/>
-        <output name="channel_out_op_1" num_pins="68"/>
-        <output name="channel_out_op_2" num_pins="68"/>
-        <output name="channel_out_op_3" num_pins="68"/>
-        <output name="channel_out_op_4" num_pins="68"/>
+        <output name="channel_out_op_0" num_pins="70"/>
+        <output name="channel_out_op_1" num_pins="70"/>
+        <output name="channel_out_op_2" num_pins="70"/>
+        <output name="channel_out_op_3" num_pins="70"/>
+        <output name="channel_out_op_4" num_pins="70"/>
 
-        <output name="flow_ctrl_out_ip_0" num_pins="2"/>
-        <output name="flow_ctrl_out_ip_1" num_pins="2"/>
-        <output name="flow_ctrl_out_ip_2" num_pins="2"/>
-        <output name="flow_ctrl_out_ip_3" num_pins="2"/>
-        <output name="flow_ctrl_out_ip_4" num_pins="2"/>
-        <!-- <fc in_type="frac" in_val="0.15" out_type="frac" out_val="0.10"/> -->
-        <fc in_type="frac" in_val="0.15" out_type="frac" out_val="0.10">
-          <fc_override port_name="channel_in_ip_0" fc_type="frac" fc_val="0"/>
-          <fc_override port_name="channel_in_ip_1" fc_type="frac" fc_val="0"/>
-          <fc_override port_name="channel_in_ip_2" fc_type="frac" fc_val="0"/>
-          <fc_override port_name="channel_in_ip_3" fc_type="frac" fc_val="0"/>
-
-          <fc_override port_name="flow_ctrl_in_op_0" fc_type="frac" fc_val="0"/>
-          <fc_override port_name="flow_ctrl_in_op_1" fc_type="frac" fc_val="0"/>
-          <fc_override port_name="flow_ctrl_in_op_2" fc_type="frac" fc_val="0"/>
-          <fc_override port_name="flow_ctrl_in_op_3" fc_type="frac" fc_val="0"/>
-
-          <fc_override port_name="channel_out_op_0" fc_type="frac" fc_val="0"/>
-          <fc_override port_name="channel_out_op_1" fc_type="frac" fc_val="0"/>
-          <fc_override port_name="channel_out_op_2" fc_type="frac" fc_val="0"/>
-          <fc_override port_name="channel_out_op_3" fc_type="frac" fc_val="0"/>
-
-          <fc_override port_name="flow_ctrl_out_ip_0" fc_type="frac" fc_val="0"/>
-          <fc_override port_name="flow_ctrl_out_ip_1" fc_type="frac" fc_val="0"/>
-          <fc_override port_name="flow_ctrl_out_ip_2" fc_type="frac" fc_val="0"/>
-          <fc_override port_name="flow_ctrl_out_ip_3" fc_type="frac" fc_val="0"/>
-        </fc>
+        <output name="flow_ctrl_out_ip_0" num_pins="3"/>
+        <output name="flow_ctrl_out_ip_1" num_pins="3"/>
+        <output name="flow_ctrl_out_ip_2" num_pins="3"/>
+        <output name="flow_ctrl_out_ip_3" num_pins="3"/>
+        <output name="flow_ctrl_out_ip_4" num_pins="3"/>
+        <fc in_type="frac" in_val="0.15" out_type="frac" out_val="0.10"/>
+        <!-- <fc in_type="frac" in_val="0.15" out_type="frac" out_val="0.10"> -->
+          <!-- <fc_override port_name="channel_in_ip_0" fc_type="frac" fc_val="0"/> -->
+          <!-- <fc_override port_name="channel_in_ip_1" fc_type="frac" fc_val="0"/> -->
+          <!-- <fc_override port_name="channel_in_ip_2" fc_type="frac" fc_val="0"/> -->
+          <!-- <fc_override port_name="channel_in_ip_3" fc_type="frac" fc_val="0"/> -->
+<!--  -->
+          <!-- <fc_override port_name="flow_ctrl_in_op_0" fc_type="frac" fc_val="0"/> -->
+          <!-- <fc_override port_name="flow_ctrl_in_op_1" fc_type="frac" fc_val="0"/> -->
+          <!-- <fc_override port_name="flow_ctrl_in_op_2" fc_type="frac" fc_val="0"/> -->
+          <!-- <fc_override port_name="flow_ctrl_in_op_3" fc_type="frac" fc_val="0"/> -->
+<!--  -->
+          <!-- <fc_override port_name="channel_out_op_0" fc_type="frac" fc_val="0"/> -->
+          <!-- <fc_override port_name="channel_out_op_1" fc_type="frac" fc_val="0"/> -->
+          <!-- <fc_override port_name="channel_out_op_2" fc_type="frac" fc_val="0"/> -->
+          <!-- <fc_override port_name="channel_out_op_3" fc_type="frac" fc_val="0"/> -->
+<!--  -->
+          <!-- <fc_override port_name="flow_ctrl_out_ip_0" fc_type="frac" fc_val="0"/> -->
+          <!-- <fc_override port_name="flow_ctrl_out_ip_1" fc_type="frac" fc_val="0"/> -->
+          <!-- <fc_override port_name="flow_ctrl_out_ip_2" fc_type="frac" fc_val="0"/> -->
+          <!-- <fc_override port_name="flow_ctrl_out_ip_3" fc_type="frac" fc_val="0"/> -->
+        <!-- </fc> -->
         <!-- <pinlocations pattern="spread"> -->
         <pinlocations pattern="custom">
           <loc side="left">router.channel_out_op_4 router.flow_ctrl_in_op_4 router.channel_in_ip_3 router.flow_ctrl_out_ip_3 router.channel_out_op_3 router.flow_ctrl_in_op_3</loc>
@@ -180,20 +180,34 @@
       <fill type="clb" priority="10"/>
     </auto_layout>
 
-    <fixed_layout name="large" width="8" height="8">
+    <fixed_layout name="large" width="20" height="20">
       <!--Perimeter of 'io' blocks with 'EMPTY' blocks at corners-->
       <perimeter type="io" priority="100"/>
       <row type="io" starty="1" priority="30"/>
-      <row type="io" starty="6" priority="30"/>
+      <row type="io" starty="2" priority="30"/>
+      <row type="io" starty="3" priority="30"/>
+      <row type="io" starty="4" priority="30"/>
+      
+
+      <row type="io" starty="17" priority="30"/>
+      <row type="io" starty="18" priority="30"/>
+      <row type="io" starty="19" priority="30"/>
       <corners type="EMPTY" priority="101"/>
 
       <fill type="clb" priority="15"/>
 
-      <single type="router" x="2" y="2" priority="20"/>
-      <single type="router" x="5" y="2" priority="20"/>  
+      <single type="router" x="6" y="6" priority="20"/>
+      <single type="router" x="10" y="6" priority="20"/> 
+      <single type="router" x="14" y="6" priority="20"/> 
 
-      <single type="router" x="2" y="5" priority="20"/>
-      <single type="router" x="5" y="5" priority="20"/>
+      <single type="router" x="6" y="10" priority="20"/>
+      <single type="router" x="10" y="10" priority="20"/> 
+      <single type="router" x="14" y="10" priority="20"/> 
+
+      <single type="router" x="6" y="14" priority="20"/>
+      <single type="router" x="10" y="14" priority="20"/> 
+      <single type="router" x="14" y="14" priority="20"/> 
+
     </fixed_layout>
   </layout>
   <device>
@@ -253,20 +267,20 @@
     </segment>
   </segmentlist>
 
-  <directlist>
+  <!-- <directlist> -->
     <!-- Router 0 and Router 1: port 1 of rtr0 to port 3 of rtr1 -->
-    <direct name="rtr_ch_0_1" from_pin="router.channel_out_op_1" to_pin="router.channel_in_ip_3" x_offset="2" y_offset="0" z_offset="0"/>
-    <direct name="rtr_ch_1_0" from_pin="router.channel_out_op_3" from_side="left" to_pin="router.channel_in_ip_1" to_side="right" x_offset="-2" y_offset="0" z_offset="0"/>
-    <direct name="rtr_flow_ctrl__0_1" from_pin="router.flow_ctrl_in_op_1" from_side="right" to_pin="router.flow_ctrl_out_ip_3" to_side="left" x_offset="2" y_offset="0" z_offset="0"/>
-    <direct name="rtr_flow_ctrl__1_0" from_pin="router.flow_ctrl_in_op_3" from_side="left" to_pin="router.flow_ctrl_out_ip_1" to_side="right" x_offset="-2" y_offset="0" z_offset="0"/>
-  
+    <!-- <direct name="rtr_ch_0_1" from_pin="router.channel_out_op_1" to_pin="router.channel_in_ip_3" x_offset="2" y_offset="0" z_offset="0"/> -->
+    <!-- <direct name="rtr_ch_1_0" from_pin="router.channel_out_op_3" from_side="left" to_pin="router.channel_in_ip_1" to_side="right" x_offset="-2" y_offset="0" z_offset="0"/> -->
+    <!-- <direct name="rtr_flow_ctrl__0_1" from_pin="router.flow_ctrl_in_op_1" from_side="right" to_pin="router.flow_ctrl_out_ip_3" to_side="left" x_offset="2" y_offset="0" z_offset="0"/> -->
+    <!-- <direct name="rtr_flow_ctrl__1_0" from_pin="router.flow_ctrl_in_op_3" from_side="left" to_pin="router.flow_ctrl_out_ip_1" to_side="right" x_offset="-2" y_offset="0" z_offset="0"/> -->
+  <!--  -->
     <!-- Router 0 and Router 2: port 0 of rtr0 to port 2 of rtr2 -->
-    <direct name="rtr_ch_0_2" from_pin="router.channel_out_op_0" from_side="top" to_pin="router.channel_in_ip_2" to_side="bottom" x_offset="0" y_offset="2" z_offset="0"/>
-    <direct name="rtr_ch_2_0" from_pin="router.channel_out_op_2" from_side="bottom" to_pin="router.channel_in_ip_0" to_side="top" x_offset="0" y_offset="-2" z_offset="0"/>
-    <direct name="rtr_flow_ctrl__0_2" from_pin="router.flow_ctrl_in_op_0" from_side="top" to_pin="router.flow_ctrl_out_ip_2" to_side="bottom" x_offset="0" y_offset="2" z_offset="0"/>
-    <direct name="rtr_flow_ctrl__2_0" from_pin="router.flow_ctrl_in_op_2" from_side="bottom" to_pin="router.flow_ctrl_out_ip_0" to_side="top" x_offset="0" y_offset="-2" z_offset="0"/>
-
-  </directlist> 
+    <!-- <direct name="rtr_ch_0_2" from_pin="router.channel_out_op_0" from_side="top" to_pin="router.channel_in_ip_2" to_side="bottom" x_offset="0" y_offset="2" z_offset="0"/> -->
+    <!-- <direct name="rtr_ch_2_0" from_pin="router.channel_out_op_2" from_side="bottom" to_pin="router.channel_in_ip_0" to_side="top" x_offset="0" y_offset="-2" z_offset="0"/> -->
+    <!-- <direct name="rtr_flow_ctrl__0_2" from_pin="router.flow_ctrl_in_op_0" from_side="top" to_pin="router.flow_ctrl_out_ip_2" to_side="bottom" x_offset="0" y_offset="2" z_offset="0"/> -->
+    <!-- <direct name="rtr_flow_ctrl__2_0" from_pin="router.flow_ctrl_in_op_2" from_side="bottom" to_pin="router.flow_ctrl_out_ip_0" to_side="top" x_offset="0" y_offset="-2" z_offset="0"/> -->
+<!--  -->
+  <!-- </directlist>  -->
 
   <complexblocklist>
     <!-- Define I/O pads begin -->
@@ -431,31 +445,31 @@
       <input name="reset" num_pins="1"/> 
       <output name="error" num_pins="1"/>
 
-      <input name="router_address" num_pins="6"/>
+      <input name="router_address" num_pins="4"/>
 
-      <input name="channel_in_ip_0" num_pins="68"/>
-      <input name="channel_in_ip_1" num_pins="68"/>
-      <input name="channel_in_ip_2" num_pins="68"/>
-      <input name="channel_in_ip_3" num_pins="68"/>
-      <input name="channel_in_ip_4" num_pins="68"/>
+      <input name="channel_in_ip_0" num_pins="70"/>
+      <input name="channel_in_ip_1" num_pins="70"/>
+      <input name="channel_in_ip_2" num_pins="70"/>
+      <input name="channel_in_ip_3" num_pins="70"/>
+      <input name="channel_in_ip_4" num_pins="70"/>
 
-      <input name="flow_ctrl_in_op_0" num_pins="2"/>
-      <input name="flow_ctrl_in_op_1" num_pins="2"/>
-      <input name="flow_ctrl_in_op_2" num_pins="2"/>
-      <input name="flow_ctrl_in_op_3" num_pins="2"/>
-      <input name="flow_ctrl_in_op_4" num_pins="2"/>
+      <input name="flow_ctrl_in_op_0" num_pins="3"/>
+      <input name="flow_ctrl_in_op_1" num_pins="3"/>
+      <input name="flow_ctrl_in_op_2" num_pins="3"/>
+      <input name="flow_ctrl_in_op_3" num_pins="3"/>
+      <input name="flow_ctrl_in_op_4" num_pins="3"/>
 
-      <output name="channel_out_op_0" num_pins="68"/>
-      <output name="channel_out_op_1" num_pins="68"/>
-      <output name="channel_out_op_2" num_pins="68"/>
-      <output name="channel_out_op_3" num_pins="68"/>
-      <output name="channel_out_op_4" num_pins="68"/>
+      <output name="channel_out_op_0" num_pins="70"/>
+      <output name="channel_out_op_1" num_pins="70"/>
+      <output name="channel_out_op_2" num_pins="70"/>
+      <output name="channel_out_op_3" num_pins="70"/>
+      <output name="channel_out_op_4" num_pins="70"/>
 
-      <output name="flow_ctrl_out_ip_0" num_pins="2"/>
-      <output name="flow_ctrl_out_ip_1" num_pins="2"/>
-      <output name="flow_ctrl_out_ip_2" num_pins="2"/>
-      <output name="flow_ctrl_out_ip_3" num_pins="2"/>
-      <output name="flow_ctrl_out_ip_4" num_pins="2"/>
+      <output name="flow_ctrl_out_ip_0" num_pins="3"/>
+      <output name="flow_ctrl_out_ip_1" num_pins="3"/>
+      <output name="flow_ctrl_out_ip_2" num_pins="3"/>
+      <output name="flow_ctrl_out_ip_3" num_pins="3"/>
+      <output name="flow_ctrl_out_ip_4" num_pins="3"/>
 
       <mode name="router_wrap">
           <pb_type name="router_wrap" blif_model=".subckt router" num_pb="1">
@@ -463,31 +477,31 @@
             <input name="reset" num_pins="1"/> 
             <output name="error" num_pins="1"/>
 
-            <input name="router_address" num_pins="6"/>
+            <input name="router_address" num_pins="4"/>
 
-            <input name="channel_in_ip_0" num_pins="68"/>
-            <input name="channel_in_ip_1" num_pins="68"/>
-            <input name="channel_in_ip_2" num_pins="68"/>
-            <input name="channel_in_ip_3" num_pins="68"/>
-            <input name="channel_in_ip_4" num_pins="68"/>
+            <input name="channel_in_ip_0" num_pins="70"/>
+            <input name="channel_in_ip_1" num_pins="70"/>
+            <input name="channel_in_ip_2" num_pins="70"/>
+            <input name="channel_in_ip_3" num_pins="70"/>
+            <input name="channel_in_ip_4" num_pins="70"/>
 
-            <input name="flow_ctrl_in_op_0" num_pins="2"/>
-            <input name="flow_ctrl_in_op_1" num_pins="2"/>
-            <input name="flow_ctrl_in_op_2" num_pins="2"/>
-            <input name="flow_ctrl_in_op_3" num_pins="2"/>
-            <input name="flow_ctrl_in_op_4" num_pins="2"/>
+            <input name="flow_ctrl_in_op_0" num_pins="3"/>
+            <input name="flow_ctrl_in_op_1" num_pins="3"/>
+            <input name="flow_ctrl_in_op_2" num_pins="3"/>
+            <input name="flow_ctrl_in_op_3" num_pins="3"/>
+            <input name="flow_ctrl_in_op_4" num_pins="3"/>
 
-            <output name="channel_out_op_0" num_pins="68"/>
-            <output name="channel_out_op_1" num_pins="68"/>
-            <output name="channel_out_op_2" num_pins="68"/>
-            <output name="channel_out_op_3" num_pins="68"/>
-            <output name="channel_out_op_4" num_pins="68"/>
+            <output name="channel_out_op_0" num_pins="70"/>
+            <output name="channel_out_op_1" num_pins="70"/>
+            <output name="channel_out_op_2" num_pins="70"/>
+            <output name="channel_out_op_3" num_pins="70"/>
+            <output name="channel_out_op_4" num_pins="70"/>
 
-            <output name="flow_ctrl_out_ip_0" num_pins="2"/>
-            <output name="flow_ctrl_out_ip_1" num_pins="2"/>
-            <output name="flow_ctrl_out_ip_2" num_pins="2"/>
-            <output name="flow_ctrl_out_ip_3" num_pins="2"/>
-            <output name="flow_ctrl_out_ip_4" num_pins="2"/>
+            <output name="flow_ctrl_out_ip_0" num_pins="3"/>
+            <output name="flow_ctrl_out_ip_1" num_pins="3"/>
+            <output name="flow_ctrl_out_ip_2" num_pins="3"/>
+            <output name="flow_ctrl_out_ip_3" num_pins="3"/>
+            <output name="flow_ctrl_out_ip_4" num_pins="3"/>
 
             <!-- <delay_constant max="1.523e-9" min="0.776e-9" in_port="mult_8x8.A" out_port="mult_8x8.Y"/>
             <delay_constant max="1.523e-9" min="0.776e-9" in_port="mult_8x8.B" out_port="mult_8x8.Y"/> -->
@@ -690,7 +704,10 @@
 
         <interconnect>
           <complete name="clk" input="router.clk" output="router_wrap.clk"/>
-          <complete name="reset" input="router.reset" output="router_wrap.reset"/>
+          <!-- <complete name="reset" input="router.reset" output="router_wrap.reset"/> -->
+          <direct name="router_address2router_reset" input="router.reset" output="router_wrap.reset">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.reset" out_port="router_wrap.reset"/>
+          </direct>
 
           <direct name="router_address2router_address" input="router.router_address" output="router_wrap.router_address">
             <delay_constant max="134e-12" min="74e-12" in_port="router.router_address" out_port="router_wrap.router_address"/>

@@ -1,15 +1,15 @@
 # Yosys synthesis script for ${TOP_MODULE}
 # Read verilog files
 read_verilog  ${VERILOG_FILES}
-
-read_verilog /home/rsunketa/OpenFPGA/test_runs/router-rtl-files/op/router_wrap.v
-read_verilog /home/rsunketa/OpenFPGA/test_runs/router-rtl-files/clib/*v
-read_verilog /home/rsunketa/OpenFPGA/test_runs/router-rtl-files/*v
+read_verilog -lib -specify  ${YOSYS_CELL_SIM_VERILOG}
+read_verilog -lib -specify /home/rsunketa/OpenFPGA/test_runs/nocgen/src/*v
 
 # Technology mapping
 hierarchy -top ${TOP_MODULE}
 proc
 
+
+#techmap -map /home/rsunketa/OpenFPGA/yosys/share/router2router_slice.v -max_iter 3
 techmap -D NO_LUT -map +/adff2dff.v
 
 # Synthesis

@@ -166,7 +166,7 @@
       <port type="input" prefix="B" lib_name="B" size="8"/>
       <port type="output" prefix="Y" lib_name="Y" size="16"/>
     </circuit_model> -->
-    <circuit_model type="hard_logic" name="router_wrap" prefix="router_wrap" is_default="true" spice_netlist="${OPENFPGA_PATH}/openfpga_flow/openfpga_cell_library/spice/router_wrap.sp" verilog_netlist="/home/rsunketa/OpenFPGA/test_runs/router_noc/verilog-files/dummy_router_wrap.v">
+    <circuit_model type="hard_logic" name="router_wrap" prefix="router_wrap" is_default="true" spice_netlist="${OPENFPGA_PATH}/openfpga_flow/openfpga_cell_library/spice/router_wrap.sp" verilog_netlist="/home/rsunketa/OpenFPGA/test_runs/nocgen/src/router.v">
       <design_technology type="cmos"/>
       <input_buffer exist="true" circuit_model_name="INVTX1"/>
       <output_buffer exist="true" circuit_model_name="INVTX1"/>
@@ -280,6 +280,64 @@
     <!-- Bind the primitive pb_type in the physical mode to a circuit model -->
     <pb_type name="router[router_wrap].router_wrap_slice.router_wrap" circuit_model_name="router_wrap"/>
 
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_RST_" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_MY_XPOS" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_MY_YPOS" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_IDATA_0" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_IDATA_1" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_IDATA_2" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_IDATA_3" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_IDATA_4" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_IVALID_0" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_IVALID_1" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_IVALID_2" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_IVALID_3" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_IVALID_4" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_IVCH_0" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_IVCH_1" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_IVCH_2" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_IVCH_3" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_IVCH_4" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_IACK_0" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_IACK_1" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_IACK_2" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_IACK_3" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_IACK_4" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_ILCK_0" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_ILCK_1" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_ILCK_2" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_ILCK_3" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_ILCK_4" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_ODATA_0" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_ODATA_1" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_ODATA_2" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_ODATA_3" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_ODATA_4" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_OVALID_0" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_OVALID_1" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_OVALID_2" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_OVALID_3" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_OVALID_4" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_OVCH_0" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_OVCH_1" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_OVCH_2" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_OVCH_3" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_OVCH_4" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_OACK_0" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_OACK_1" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_OACK_2" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_OACK_3" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_OACK_4" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_ORDY_0" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_ORDY_1" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_ORDY_2" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_ORDY_3" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_ORDY_4" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_OLCK_0" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_OLCK_1" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_OLCK_2" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_OLCK_3" circuit_model_name="DFFSRQ"/>
+    <pb_type name="router[router_wrap].router_wrap_slice.ff_OLCK_4" circuit_model_name="DFFSRQ"/>
 
   </pb_type_annotations>
 </openfpga_architecture>

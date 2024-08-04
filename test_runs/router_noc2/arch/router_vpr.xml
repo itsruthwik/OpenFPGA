@@ -167,7 +167,6 @@
           <site pb_type="router" pin_mapping="direct"/>
         </equivalent_sites>
         <clock name="clk" num_pins="1"/>
-
         <input name="rst_"  num_pins="1"/>  
         <input name="my_xpos"  num_pins="2"/>  
         <input name="my_ypos"  num_pins="2"/>  
@@ -196,7 +195,6 @@
         <input name="ilck_2"  num_pins="2"/>    
         <input name="ilck_3"  num_pins="2"/>    
         <input name="ilck_4"  num_pins="2"/>    
-
         <output name="odata_0"  num_pins="35"/>  
         <output name="odata_1"  num_pins="35"/>  
         <output name="odata_2"  num_pins="35"/>  
@@ -227,35 +225,8 @@
         <output name="olck_2"  num_pins="2"/>  
         <output name="olck_3"  num_pins="2"/>  
         <output name="olck_4"  num_pins="2"/>  
-
         <fc in_type="frac" in_val="0.15" out_type="frac" out_val="0.10"/>
-        <!-- <fc in_type="frac" in_val="0.15" out_type="frac" out_val="0.10"> -->
-          <!-- <fc_override port_name="channel_in_ip_0" fc_type="frac" fc_val="0"/> -->
-          <!-- <fc_override port_name="channel_in_ip_1" fc_type="frac" fc_val="0"/> -->
-          <!-- <fc_override port_name="channel_in_ip_2" fc_type="frac" fc_val="0"/> -->
-          <!-- <fc_override port_name="channel_in_ip_3" fc_type="frac" fc_val="0"/> -->
-<!--  -->
-          <!-- <fc_override port_name="flow_ctrl_in_op_0" fc_type="frac" fc_val="0"/> -->
-          <!-- <fc_override port_name="flow_ctrl_in_op_1" fc_type="frac" fc_val="0"/> -->
-          <!-- <fc_override port_name="flow_ctrl_in_op_2" fc_type="frac" fc_val="0"/> -->
-          <!-- <fc_override port_name="flow_ctrl_in_op_3" fc_type="frac" fc_val="0"/> -->
-<!--  -->
-          <!-- <fc_override port_name="channel_out_op_0" fc_type="frac" fc_val="0"/> -->
-          <!-- <fc_override port_name="channel_out_op_1" fc_type="frac" fc_val="0"/> -->
-          <!-- <fc_override port_name="channel_out_op_2" fc_type="frac" fc_val="0"/> -->
-          <!-- <fc_override port_name="channel_out_op_3" fc_type="frac" fc_val="0"/> -->
-<!--  -->
-          <!-- <fc_override port_name="flow_ctrl_out_ip_0" fc_type="frac" fc_val="0"/> -->
-          <!-- <fc_override port_name="flow_ctrl_out_ip_1" fc_type="frac" fc_val="0"/> -->
-          <!-- <fc_override port_name="flow_ctrl_out_ip_2" fc_type="frac" fc_val="0"/> -->
-          <!-- <fc_override port_name="flow_ctrl_out_ip_3" fc_type="frac" fc_val="0"/> -->
-        <!-- </fc> -->
         <pinlocations pattern="spread">
-        <!-- <pinlocations pattern="custom"> -->
-          <!-- <loc side="left">router.odata_4  router.ovalid_4  router.ovch_4  router.oack_4  router.ordy_4  router.olck_4 router.idata_3 router.ivalid_3 router.ivch_3 router.iack_3 router.ilck_3 router.odata_3 router.ovalid_3 router.ovch_3 router.oack_3 router.ordy_3 router.olck_3</loc> -->
-          <!-- <loc side="top">router.idata_4  router.ivalid_4  router.ivch_4  router.iack_4  router.ilck_4 router.idata_0 router.ivalid_0 router.ivch_0 router.iack_0 router.ilck_0 router.odata_0 router.ovalid_0 router.ovch_0 router.oack_0 router.ordy_0 router.olck_0</loc> -->
-          <!-- <loc side="right">router.idata_1 router.ivalid_1 router.ivch_1 router.iack_1 router.ilck_1 router.odata_1 router.ovalid_1 router.ovch_1 router.oack_1 router.ordy_1 router.olck_1 router.clk router.rst_</loc> -->
-          <!-- <loc side="bottom">router.idata_2 router.ivalid_2 router.ivch_2 router.iack_2 router.ilck_2 router.odata_2 router.ovalid_2 router.ovch_2 router.oack_2 router.ordy_2 router.olck_2 router.my_xpos router.my_ypos</loc> -->
         </pinlocations>
       </sub_tile>
     </tile>
@@ -288,35 +259,19 @@
       <col type="EMPTY" startx="2" repeatx="8" starty="1" priority="19"/>
     </fixed_layout>
 
-    <fixed_layout name="large" width="12" height="12">
+    <fixed_layout name="large" width="20" height="20">
       <!--Perimeter of 'io' blocks with 'EMPTY' blocks at corners-->
       <perimeter type="io" priority="100"/>
-      <row type="io" starty="1" priority="30"/>
-      <row type="io" starty="2" priority="30"/>
-      <!-- <row type="io" starty="3" priority="30"/> -->
-      <!-- <row type="io" starty="4" priority="30"/> -->
-      
-
-      <!-- <row type="io" starty="17" priority="30"/> -->
-      <!-- <row type="io" starty="18" priority="30"/> -->
-      <row type="io" starty="19" priority="30"/>
+      <!-- <row type="EMPTY" starty="1" priority="30"/> -->
+      <!-- <row type="EMPTY" starty="2" priority="30"/> -->
+      <!-- <row type="EMPTY" starty="3" priority="30"/> -->
+      <!-- <row type="EMPTY" starty="4" priority="30"/> -->
+      <!-- <row type="EMPTY" starty="17" priority="30"/> -->
+      <!-- <row type="EMPTY" starty="18" priority="30"/> -->
       <corners type="EMPTY" priority="101"/>
-
-      <fill type="clb" priority="15"/>
-      <!-- <col type="mult_8" startx="2" starty="1"  priority="15"/> -->
-
-      <single type="router" x="6" y="6" priority="20"/>
-      <single type="router" x="10" y="6" priority="20"/> 
-      <!-- <single type="router" x="14" y="6" priority="20"/>  -->
-<!--  -->
-      <!-- <single type="router" x="6" y="10" priority="20"/> -->
-      <!-- <single type="router" x="10" y="10" priority="20"/>  -->
-      <!-- <single type="router" x="14" y="10" priority="20"/>  -->
-<!--  -->
-      <!-- <single type="router" x="6" y="14" priority="20"/> -->
-      <!-- <single type="router" x="10" y="14" priority="20"/>  -->
-      <!-- <single type="router" x="14" y="14" priority="20"/>  -->
-
+      <fill type="EMPTY" priority="15"/>
+      <row type="clb" starty="5" priority="30"/>
+      <single type="router" x="6" y="6" priority="50"/>
     </fixed_layout>
   </layout>
   <device>
@@ -696,10 +651,7 @@
 
       <mode name="router_wrap">
         <pb_type name="router_wrap_slice" num_pb="1">
-          <!-- <input name="A_cfg" num_pins="8"/>       -->
-          <!-- <input name="B_cfg" num_pins="8"/> -->
-          <!-- <output name="OUT_cfg" num_pins="16"/> -->
-          <!-- <clock name="clk" num_pins="1"/> -->
+
           <clock name="clk" num_pins="1"/>
           <input name="RST__cfg"  num_pins="1"/>  
           <input name="MY_XPOS_cfg"  num_pins="2"/>  
@@ -761,9 +713,7 @@
           <output name="OLCK_4_cfg"  num_pins="2"/>  
 
           <pb_type name="router_wrap" blif_model=".subckt router" num_pb="1">
-            <!-- <input name="A" num_pins="8"/> -->
-            <!-- <input name="B" num_pins="8"/> -->
-            <!-- <output name="Y" num_pins="16"/> -->
+
             <clock name="clk" num_pins="1"/>
 
             <input name="RST_"  num_pins="1"/>  
@@ -824,9 +774,6 @@
             <output name="OLCK_2"  num_pins="2"/>  
             <output name="OLCK_3"  num_pins="2"/>  
             <output name="OLCK_4"  num_pins="2"/>  
-
-            <!-- <delay_constant max="1.523e-9" min="0.776e-9" in_port="mult_8x8.A" out_port="mult_8x8.Y"/> -->
-            <!-- <delay_constant max="1.523e-9" min="0.776e-9" in_port="mult_8x8.B" out_port="mult_8x8.Y"/> -->
 
 
             <delay_constant max="2.14e-9" min="0.776e-9" in_port="router_wrap.RST_" out_port="router_wrap.ODATA_0"/>  
@@ -1857,12 +1804,7 @@
           </power>
         </pb_type>
         <interconnect>
-          <!-- Stratix IV input delay of 207ps is conservative for this architecture because this architecture does not have an input crossbar in the multiplier. 
-		   Subtract 72.5 ps delay, which is already in the connection block input mux, leading
-		   to a 134 ps delay.
-				The interconnect difference for DSP blocks is 0.5523, which leads to a minimum delay of 74 ps
-              -->
-              <!-- inputs -->
+
  
 
           <direct name="rst_2rst_" input="router.rst_" output="router_wrap_slice.RST__cfg">
@@ -1949,7 +1891,6 @@
           <direct name="ilck_42ilck_4" input="router.ilck_4" output="router_wrap_slice.ILCK_4_cfg">
             <delay_constant max="134e-12" min="74e-12" in_port="router.ilck_4" out_port="router_wrap_slice.ILCK_4_cfg"/>
           </direct>
-          <!-- inputs done -->
           <direct name="odata_02odata_0" input="router_wrap_slice.ODATA_0_cfg" output="router.odata_0">
             <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap_slice.ODATA_0_cfg" out_port="router.odata_0"/>
           </direct>
@@ -2044,9 +1985,314 @@
           <complete name="clk" input="router.clk" output="router_wrap_slice.clk"/>
         </interconnect>
       </mode>
-      <!-- Place this multiplier block every 8 columns from (and including) the sixth column -->
       <power method="sum-of-children"/>
     </pb_type>
+    <!-- <pb_type name="router">
+      <clock name="clk" num_pins="1"/>
+      <input name="rst_"  num_pins="1"/>  
+      <input name="my_xpos"  num_pins="2"/>  
+      <input name="my_ypos"  num_pins="2"/>  
+      <input name="idata_0"  num_pins="35"/>   
+      <input name="idata_1"  num_pins="35"/>   
+      <input name="idata_2"  num_pins="35"/>   
+      <input name="idata_3"  num_pins="35"/>   
+      <input name="idata_4"  num_pins="35"/>   
+      <input name="ivalid_0"  num_pins="1"/>  
+      <input name="ivalid_1"  num_pins="1"/>  
+      <input name="ivalid_2"  num_pins="1"/>  
+      <input name="ivalid_3"  num_pins="1"/>  
+      <input name="ivalid_4"  num_pins="1"/>  
+      <input name="ivch_0"  num_pins="1"/>   
+      <input name="ivch_1"  num_pins="1"/>    
+      <input name="ivch_2"  num_pins="1"/>    
+      <input name="ivch_3"  num_pins="1"/>    
+      <input name="ivch_4"  num_pins="1"/>    
+      <input name="iack_0"  num_pins="2"/>    
+      <input name="iack_1"  num_pins="2"/>    
+      <input name="iack_2"  num_pins="2"/>    
+      <input name="iack_3"  num_pins="2"/>    
+      <input name="iack_4"  num_pins="2"/>    
+      <input name="ilck_0"  num_pins="2"/>    
+      <input name="ilck_1"  num_pins="2"/>    
+      <input name="ilck_2"  num_pins="2"/>    
+      <input name="ilck_3"  num_pins="2"/>    
+      <input name="ilck_4"  num_pins="2"/>          
+      <output name="odata_0"  num_pins="35"/>  
+      <output name="odata_1"  num_pins="35"/>  
+      <output name="odata_2"  num_pins="35"/>  
+      <output name="odata_3"  num_pins="35"/>  
+      <output name="odata_4"  num_pins="35"/>  
+      <output name="ovalid_0"  num_pins="1"/>  
+      <output name="ovalid_1"  num_pins="1"/>  
+      <output name="ovalid_2"  num_pins="1"/>  
+      <output name="ovalid_3"  num_pins="1"/>  
+      <output name="ovalid_4"  num_pins="1"/>  
+      <output name="ovch_0"  num_pins="1"/>  
+      <output name="ovch_1"  num_pins="1"/>  
+      <output name="ovch_2"  num_pins="1"/>  
+      <output name="ovch_3"  num_pins="1"/>  
+      <output name="ovch_4"  num_pins="1"/>  
+      <output name="oack_0"  num_pins="2"/>  
+      <output name="oack_1"  num_pins="2"/>  
+      <output name="oack_2"  num_pins="2"/>  
+      <output name="oack_3"  num_pins="2"/>  
+      <output name="oack_4"  num_pins="2"/>  
+      <output name="ordy_0"  num_pins="2"/>  
+      <output name="ordy_1"  num_pins="2"/>  
+      <output name="ordy_2"  num_pins="2"/>  
+      <output name="ordy_3"  num_pins="2"/>  
+      <output name="ordy_4"  num_pins="2"/>  
+      <output name="olck_0"  num_pins="2"/>  
+      <output name="olck_1"  num_pins="2"/>  
+      <output name="olck_2"  num_pins="2"/>  
+      <output name="olck_3"  num_pins="2"/>  
+      <output name="olck_4"  num_pins="2"/>  
 
+        <pb_type name="router_wrap" blif_model=".subckt router" num_pb="1">
+
+          <clock name="clk" num_pins="1"/>
+          <input name="RST_"  num_pins="1"/>  
+          <input name="MY_XPOS"  num_pins="2"/>  
+          <input name="MY_YPOS"  num_pins="2"/>  
+          <input name="IDATA_0"  num_pins="35"/>   
+          <input name="IDATA_1"  num_pins="35"/>   
+          <input name="IDATA_2"  num_pins="35"/>   
+          <input name="IDATA_3"  num_pins="35"/>   
+          <input name="IDATA_4"  num_pins="35"/>   
+          <input name="IVALID_0"  num_pins="1"/>  
+          <input name="IVALID_1"  num_pins="1"/>  
+          <input name="IVALID_2"  num_pins="1"/>  
+          <input name="IVALID_3"  num_pins="1"/>  
+          <input name="IVALID_4"  num_pins="1"/>  
+          <input name="IVCH_0"  num_pins="1"/>   
+          <input name="IVCH_1"  num_pins="1"/>    
+          <input name="IVCH_2"  num_pins="1"/>    
+          <input name="IVCH_3"  num_pins="1"/>    
+          <input name="IVCH_4"  num_pins="1"/>    
+          <input name="IACK_0"  num_pins="2"/>    
+          <input name="IACK_1"  num_pins="2"/>    
+          <input name="IACK_2"  num_pins="2"/>    
+          <input name="IACK_3"  num_pins="2"/>    
+          <input name="IACK_4"  num_pins="2"/>    
+          <input name="ILCK_0"  num_pins="2"/>    
+          <input name="ILCK_1"  num_pins="2"/>    
+          <input name="ILCK_2"  num_pins="2"/>    
+          <input name="ILCK_3"  num_pins="2"/>    
+          <input name="ILCK_4"  num_pins="2"/>          
+          <output name="ODATA_0"  num_pins="35"/>  
+          <output name="ODATA_1"  num_pins="35"/>  
+          <output name="ODATA_2"  num_pins="35"/>  
+          <output name="ODATA_3"  num_pins="35"/>  
+          <output name="ODATA_4"  num_pins="35"/>  
+          <output name="OVALID_0"  num_pins="1"/>  
+          <output name="OVALID_1"  num_pins="1"/>  
+          <output name="OVALID_2"  num_pins="1"/>  
+          <output name="OVALID_3"  num_pins="1"/>  
+          <output name="OVALID_4"  num_pins="1"/>  
+          <output name="OVCH_0"  num_pins="1"/>  
+          <output name="OVCH_1"  num_pins="1"/>  
+          <output name="OVCH_2"  num_pins="1"/>  
+          <output name="OVCH_3"  num_pins="1"/>  
+          <output name="OVCH_4"  num_pins="1"/>  
+          <output name="OACK_0"  num_pins="2"/>  
+          <output name="OACK_1"  num_pins="2"/>  
+          <output name="OACK_2"  num_pins="2"/>  
+          <output name="OACK_3"  num_pins="2"/>  
+          <output name="OACK_4"  num_pins="2"/>  
+          <output name="ORDY_0"  num_pins="2"/>  
+          <output name="ORDY_1"  num_pins="2"/>  
+          <output name="ORDY_2"  num_pins="2"/>  
+          <output name="ORDY_3"  num_pins="2"/>  
+          <output name="ORDY_4"  num_pins="2"/>  
+          <output name="OLCK_0"  num_pins="2"/>  
+          <output name="OLCK_1"  num_pins="2"/>  
+          <output name="OLCK_2"  num_pins="2"/>  
+          <output name="OLCK_3"  num_pins="2"/>  
+          <output name="OLCK_4"  num_pins="2"/>  
+        </pb_type>
+
+        <interconnect>
+
+ 
+
+          <direct name="rst_2rst_" input="router.rst_" output="router_wrap.RST_">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.rst_" out_port="router_wrap.RST_"/>
+          </direct>
+          <direct name="my_xpos2my_xpos" input="router.my_xpos" output="router_wrap.MY_XPOS">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.my_xpos" out_port="router_wrap.MY_XPOS"/>
+          </direct>
+          <direct name="my_ypos2my_ypos" input="router.my_ypos" output="router_wrap.MY_YPOS">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.my_ypos" out_port="router_wrap.MY_YPOS"/>
+          </direct>
+          <direct name="idata_02idata_0" input="router.idata_0" output="router_wrap.IDATA_0">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.idata_0" out_port="router_wrap.IDATA_0"/>
+          </direct>
+          <direct name="idata_12idata_1" input="router.idata_1" output="router_wrap.IDATA_1">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.idata_1" out_port="router_wrap.IDATA_1"/>
+          </direct>
+          <direct name="idata_22idata_2" input="router.idata_2" output="router_wrap.IDATA_2">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.idata_2" out_port="router_wrap.IDATA_2"/>
+          </direct>
+          <direct name="idata_32idata_3" input="router.idata_3" output="router_wrap.IDATA_3">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.idata_3" out_port="router_wrap.IDATA_3"/>
+          </direct>
+          <direct name="idata_42idata_4" input="router.idata_4" output="router_wrap.IDATA_4">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.idata_4" out_port="router_wrap.IDATA_4"/>
+          </direct>
+          <direct name="ivalid_02ivalid_0" input="router.ivalid_0" output="router_wrap.IVALID_0">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.ivalid_0" out_port="router_wrap.IVALID_0"/>
+          </direct>
+          <direct name="ivalid_12ivalid_1" input="router.ivalid_1" output="router_wrap.IVALID_1">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.ivalid_1" out_port="router_wrap.IVALID_1"/>
+          </direct>
+          <direct name="ivalid_22ivalid_2" input="router.ivalid_2" output="router_wrap.IVALID_2">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.ivalid_2" out_port="router_wrap.IVALID_2"/>
+          </direct>
+          <direct name="ivalid_32ivalid_3" input="router.ivalid_3" output="router_wrap.IVALID_3">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.ivalid_3" out_port="router_wrap.IVALID_3"/>
+          </direct>
+          <direct name="ivalid_42ivalid_4" input="router.ivalid_4" output="router_wrap.IVALID_4">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.ivalid_4" out_port="router_wrap.IVALID_4"/>
+          </direct>
+          <direct name="ivch_02ivch_0" input="router.ivch_0" output="router_wrap.IVCH_0">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.ivch_0" out_port="router_wrap.IVCH_0"/>
+          </direct>
+          <direct name="ivch_12ivch_1" input="router.ivch_1" output="router_wrap.IVCH_1">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.ivch_1" out_port="router_wrap.IVCH_1"/>
+          </direct>
+          <direct name="ivch_22ivch_2" input="router.ivch_2" output="router_wrap.IVCH_2">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.ivch_2" out_port="router_wrap.IVCH_2"/>
+          </direct>
+          <direct name="ivch_32ivch_3" input="router.ivch_3" output="router_wrap.IVCH_3">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.ivch_3" out_port="router_wrap.IVCH_3"/>
+          </direct>
+          <direct name="ivch_42ivch_4" input="router.ivch_4" output="router_wrap.IVCH_4">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.ivch_4" out_port="router_wrap.IVCH_4"/>
+          </direct>
+          <direct name="iack_02iack_0" input="router.iack_0" output="router_wrap.IACK_0">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.iack_0" out_port="router_wrap.IACK_0"/>
+          </direct>
+          <direct name="iack_12iack_1" input="router.iack_1" output="router_wrap.IACK_1">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.iack_1" out_port="router_wrap.IACK_1"/>
+          </direct>
+          <direct name="iack_22iack_2" input="router.iack_2" output="router_wrap.IACK_2">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.iack_2" out_port="router_wrap.IACK_2"/>
+          </direct>
+          <direct name="iack_32iack_3" input="router.iack_3" output="router_wrap.IACK_3">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.iack_3" out_port="router_wrap.IACK_3"/>
+          </direct>
+          <direct name="iack_42iack_4" input="router.iack_4" output="router_wrap.IACK_4">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.iack_4" out_port="router_wrap.IACK_4"/>
+          </direct>
+          <direct name="ilck_02ilck_0" input="router.ilck_0" output="router_wrap.ILCK_0">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.ilck_0" out_port="router_wrap.ILCK_0"/>
+          </direct>
+          <direct name="ilck_12ilck_1" input="router.ilck_1" output="router_wrap.ILCK_1">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.ilck_1" out_port="router_wrap.ILCK_1"/>
+          </direct>
+          <direct name="ilck_22ilck_2" input="router.ilck_2" output="router_wrap.ILCK_2">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.ilck_2" out_port="router_wrap.ILCK_2"/>
+          </direct>
+          <direct name="ilck_32ilck_3" input="router.ilck_3" output="router_wrap.ILCK_3">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.ilck_3" out_port="router_wrap.ILCK_3"/>
+          </direct>
+          <direct name="ilck_42ilck_4" input="router.ilck_4" output="router_wrap.ILCK_4">
+            <delay_constant max="134e-12" min="74e-12" in_port="router.ilck_4" out_port="router_wrap.ILCK_4"/>
+          </direct>
+          <direct name="odata_02odata_0" input="router_wrap.ODATA_0" output="router.odata_0">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.ODATA_0" out_port="router.odata_0"/>
+          </direct>
+          <direct name="odata_12odata_1" input="router_wrap.ODATA_1" output="router.odata_1">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.ODATA_1" out_port="router.odata_1"/>
+          </direct>
+          <direct name="odata_22odata_2" input="router_wrap.ODATA_2" output="router.odata_2">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.ODATA_2" out_port="router.odata_2"/>
+          </direct>
+          <direct name="odata_32odata_3" input="router_wrap.ODATA_3" output="router.odata_3">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.ODATA_3" out_port="router.odata_3"/>
+          </direct>
+          <direct name="odata_42odata_4" input="router_wrap.ODATA_4" output="router.odata_4">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.ODATA_4" out_port="router.odata_4"/>
+          </direct>
+          <direct name="ovalid_02ovalid_0" input="router_wrap.OVALID_0" output="router.ovalid_0">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.OVALID_0" out_port="router.ovalid_0"/>
+          </direct>
+          <direct name="ovalid_12ovalid_1" input="router_wrap.OVALID_1" output="router.ovalid_1">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.OVALID_1" out_port="router.ovalid_1"/>
+          </direct>
+          <direct name="ovalid_22ovalid_2" input="router_wrap.OVALID_2" output="router.ovalid_2">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.OVALID_2" out_port="router.ovalid_2"/>
+          </direct>
+          <direct name="ovalid_32ovalid_3" input="router_wrap.OVALID_3" output="router.ovalid_3">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.OVALID_3" out_port="router.ovalid_3"/>
+          </direct>
+          <direct name="ovalid_42ovalid_4" input="router_wrap.OVALID_4" output="router.ovalid_4">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.OVALID_4" out_port="router.ovalid_4"/>
+          </direct>
+          <direct name="ovch_02ovch_0" input="router_wrap.OVCH_0" output="router.ovch_0">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.OVCH_0" out_port="router.ovch_0"/>
+          </direct>
+          <direct name="ovch_12ovch_1" input="router_wrap.OVCH_1" output="router.ovch_1">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.OVCH_1" out_port="router.ovch_1"/>
+          </direct>
+          <direct name="ovch_22ovch_2" input="router_wrap.OVCH_2" output="router.ovch_2">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.OVCH_2" out_port="router.ovch_2"/>
+          </direct>
+          <direct name="ovch_32ovch_3" input="router_wrap.OVCH_3" output="router.ovch_3">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.OVCH_3" out_port="router.ovch_3"/>
+          </direct>
+          <direct name="ovch_42ovch_4" input="router_wrap.OVCH_4" output="router.ovch_4">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.OVCH_4" out_port="router.ovch_4"/>
+          </direct>
+          <direct name="oack_02oack_0" input="router_wrap.OACK_0" output="router.oack_0">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.OACK_0" out_port="router.oack_0"/>
+          </direct>
+          <direct name="oack_12oack_1" input="router_wrap.OACK_1" output="router.oack_1">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.OACK_1" out_port="router.oack_1"/>
+          </direct>
+          <direct name="oack_22oack_2" input="router_wrap.OACK_2" output="router.oack_2">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.OACK_2" out_port="router.oack_2"/>
+          </direct>
+          <direct name="oack_32oack_3" input="router_wrap.OACK_3" output="router.oack_3">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.OACK_3" out_port="router.oack_3"/>
+          </direct>
+          <direct name="oack_42oack_4" input="router_wrap.OACK_4" output="router.oack_4">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.OACK_4" out_port="router.oack_4"/>
+          </direct>
+          <direct name="ordy_02ordy_0" input="router_wrap.ORDY_0" output="router.ordy_0">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.ORDY_0" out_port="router.ordy_0"/>
+          </direct>
+          <direct name="ordy_12ordy_1" input="router_wrap.ORDY_1" output="router.ordy_1">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.ORDY_1" out_port="router.ordy_1"/>
+          </direct>
+          <direct name="ordy_22ordy_2" input="router_wrap.ORDY_2" output="router.ordy_2">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.ORDY_2" out_port="router.ordy_2"/>
+          </direct>
+          <direct name="ordy_32ordy_3" input="router_wrap.ORDY_3" output="router.ordy_3">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.ORDY_3" out_port="router.ordy_3"/>
+          </direct>
+          <direct name="ordy_42ordy_4" input="router_wrap.ORDY_4" output="router.ordy_4">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.ORDY_4" out_port="router.ordy_4"/>
+          </direct>
+          <direct name="olck_02olck_0" input="router_wrap.OLCK_0" output="router.olck_0">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.OLCK_0" out_port="router.olck_0"/>
+          </direct>
+          <direct name="olck_12olck_1" input="router_wrap.OLCK_1" output="router.olck_1">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.OLCK_1" out_port="router.olck_1"/>
+          </direct>
+          <direct name="olck_22olck_2" input="router_wrap.OLCK_2" output="router.olck_2">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.OLCK_2" out_port="router.olck_2"/>
+          </direct>
+          <direct name="olck_32olck_3" input="router_wrap.OLCK_3" output="router.olck_3">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.OLCK_3" out_port="router.olck_3"/>
+          </direct>
+          <direct name="olck_42olck_4" input="router_wrap.OLCK_4" output="router.olck_4">
+            <delay_constant max="1.93e-9" min="74e-12" in_port="router_wrap.OLCK_4" out_port="router.olck_4"/>
+          </direct>
+
+          <complete name="clk" input="router.clk" output="router_wrap.clk"/>
+        </interconnect>
+
+    </pb_type> -->
   </complexblocklist>
 </architecture>
