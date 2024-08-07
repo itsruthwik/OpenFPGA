@@ -57,15 +57,4 @@ package-lock.json
 
 
 ROUTER-rtl/
-
-test_runs/router_reg/full-run-with-addr-benchmark
-test_runs/router_reg/iverilog-failed-addr-benchmark
-test_runs/router_reg/iverilog-failed-routertb
-test_runs/router_reg/routertb-yosys-vpr-flow-without-iverilog
-test_runs/router_reg/verification-errors
-test_runs/router_reg/verification-errors
-/home/rsunketa/OpenFPGA/test_runs/router_reg/verification-errors
-test_runs/router_reg/verilog-generated-without-errors
-test_runs/router_reg/full-run-with-addr-benchmark
-
-/home/rsunketa/OpenFPGA/ROUTER-rtl
+test_runs/

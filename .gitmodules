@@ -8,3 +8,6 @@
 	path = vtr-verilog-to-routing
 	url = https://github.com/verilog-to-routing/vtr-verilog-to-routing.git
     branch = openfpga
+[submodule "openfpga-test-runs"]
+	path = openfpga-test-runs
+	url = https://github.com/itsruthwik/openfpga-test-runs.git
