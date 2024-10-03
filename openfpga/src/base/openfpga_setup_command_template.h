@@ -324,6 +324,13 @@ ShellCommandId add_pb_pin_fixup_command_template(
   const std::vector<ShellCommandId>& dependent_cmds, const bool& hidden) {
   Command shell_cmd("pb_pin_fixup");
 
+  /* Add an option '--map_global_net_to_msb' */
+  shell_cmd.add_option(
+    "map_global_net_to_msb", false,
+    "If specified, any global net including clock, reset etc, will be mapped "
+    "to a best-fit Most Significant Bit (MSB) of input ports of programmable "
+    "blocks. If not specified, a best-fit Least Significant Bit (LSB) will be "
+    "the default choice");
   /* Add an option '--verbose' */
   shell_cmd.add_option("verbose", false, "Show verbose outputs");
 
@@ -710,6 +717,12 @@ ShellCommandId add_route_clock_rr_graph_command_template(
   shell_cmd.set_option_short_name(opt_file, "pcf");
   shell_cmd.set_option_require_value(opt_file, openfpga::OPT_STRING);
 
+  shell_cmd.add_option("disable_unused_trees", false,
+                       "Disable entire clock trees when they are not used by "
+                       "any clock nets. Useful to reduce clock power");
+  shell_cmd.add_option("disable_unused_spines", false,
+                       "Disable part of the clock tree which are used by clock "
+                       "nets. Useful to reduce clock power");
   /* Add an option '--verbose' */
   shell_cmd.add_option("verbose", false, "Show verbose outputs");
 
@@ -918,6 +931,128 @@ ShellCommandId add_write_fabric_pin_physical_location_command_template(
   shell.set_command_const_execute_function(
     shell_cmd_id, write_fabric_pin_physical_location_template<T>);
 
+  /* Add command dependency to the Shell */
+  shell.set_command_dependency(shell_cmd_id, dependent_cmds);
+
+  return shell_cmd_id;
+}
+
+/********************************************************************
+ * - Add a command to Shell environment: read_unique_blocks
+ * - Add associated options
+ * - Add command dependency
+ *******************************************************************/
+template <class T>
+ShellCommandId add_read_unique_blocks_command_template(
+  openfpga::Shell<T>& shell, const ShellCommandClassId& cmd_class_id,
+  const std::vector<ShellCommandId>& dependent_cmds, const bool& hidden) {
+  Command shell_cmd("read_unique_blocks");
+
+  /* Add an option '--file' */
+  CommandOptionId opt_file = shell_cmd.add_option(
+    "file", true, "specify the file which contains unique block information");
+  shell_cmd.set_option_require_value(opt_file, openfpga::OPT_STRING);
+
+  /* Add an option '--type' */
+  CommandOptionId opt_type =
+    shell_cmd.add_option("type", true,
+                         "Specify the type of the unique blocks file "
+                         "[xml|bin]. If not specified, by default it is XML.");
+  shell_cmd.set_option_require_value(opt_type, openfpga::OPT_STRING);
+
+  /* Add an option '--verbose' */
+  shell_cmd.add_option("verbose", false, "Show verbose outputs");
+
+  /* Add command 'compact_routing_hierarchy' to the Shell */
+  ShellCommandId shell_cmd_id =
+    shell.add_command(shell_cmd, "Preload unique blocks from xml file", hidden);
+  shell.set_command_class(shell_cmd_id, cmd_class_id);
+  shell.set_command_execute_function(shell_cmd_id,
+                                     read_unique_blocks_template<T>);
+
+  /* Add command dependency to the Shell */
+  shell.set_command_dependency(shell_cmd_id, dependent_cmds);
+
+  return shell_cmd_id;
+}
+
+/********************************************************************
+ * - Add a command to Shell environment: write_unique_blocks
+ * - Add associated options
+ * - Add command dependency
+ *******************************************************************/
+template <class T>
+ShellCommandId add_write_unique_blocks_command_template(
+  openfpga::Shell<T>& shell, const ShellCommandClassId& cmd_class_id,
+  const std::vector<ShellCommandId>& dependent_cmds, const bool& hidden) {
+  Command shell_cmd("write_unique_blocks");
+
+  /* Add an option '--file' */
+  CommandOptionId opt_file = shell_cmd.add_option(
+    "file", true,
+    "specify the file which we will write unique block information to");
+  shell_cmd.set_option_require_value(opt_file, openfpga::OPT_STRING);
+
+  /* Add an option '--type' */
+  CommandOptionId opt_type =
+    shell_cmd.add_option("type", true,
+                         "Specify the type of the unique blocks file "
+                         "[xml|bin]. If not specified, by default it is XML.");
+  shell_cmd.set_option_require_value(opt_type, openfpga::OPT_STRING);
+
+  /* Add an option '--verbose' */
+  shell_cmd.add_option("verbose", false, "Show verbose outputs");
+
+  /* Add command 'compact_routing_hierarchy' to the Shell */
+  ShellCommandId shell_cmd_id =
+    shell.add_command(shell_cmd, "Write unique blocks to a xml file", hidden);
+  shell.set_command_class(shell_cmd_id, cmd_class_id);
+  shell.set_command_execute_function(shell_cmd_id,
+                                     write_unique_blocks_template<T>);
+  /* Add command dependency to the Shell */
+  shell.set_command_dependency(shell_cmd_id, dependent_cmds);
+
+  return shell_cmd_id;
+}
+
+/******************************************************************
+ * - Add a command to Shell environment: report_reference
+ * - Add associated options
+ * - Add command dependency
+ ******************************************************************/
+template <class T>
+ShellCommandId add_report_reference_command_template(
+  openfpga::Shell<T>& shell, const ShellCommandClassId& cmd_class_id,
+  const std::vector<ShellCommandId>& dependent_cmds, const bool& hidden) {
+  Command shell_cmd("report_reference");
+  /* Add an option '--file' in short '-f'*/
+  CommandOptionId opt_file =
+    shell_cmd.add_option("file", true, "specify the file to output results");
+  shell_cmd.set_option_short_name(opt_file, "f");
+  shell_cmd.set_option_require_value(opt_file, openfpga::OPT_STRING);
+
+  /* Add an option '--module'*/
+  CommandOptionId opt_module =
+    shell_cmd.add_option("module", false,
+                         "specify the module under which the references of "
+                         "child modules will be reported");
+  shell_cmd.set_option_require_value(opt_module, openfpga::OPT_STRING);
+
+  /* Add an option '--no_time_stamp' */
+  shell_cmd.add_option("no_time_stamp", false,
+                       "do not print time stamp in output files");
+
+  shell_cmd.add_option("verbose", false, "Show verbose outputs");
+
+  /* Add command to the Shell */
+  ShellCommandId shell_cmd_id =
+    shell.add_command(shell_cmd,
+                      "report all instances of each unique module, "
+                      "under a given module",
+                      hidden);
+  shell.set_command_class(shell_cmd_id, cmd_class_id);
+  shell.set_command_const_execute_function(shell_cmd_id,
+                                           report_reference_template<T>);
   /* Add command dependency to the Shell */
   shell.set_command_dependency(shell_cmd_id, dependent_cmds);
 
@@ -1175,8 +1310,33 @@ void add_setup_command_templates(openfpga::Shell<T>& shell,
   add_write_fabric_pin_physical_location_command_template<T>(
     shell, openfpga_setup_cmd_class,
     cmd_dependency_write_fabric_pin_physical_location, hidden);
-}
 
+  /********************************
+   * Command 'report_reference'
+   */
+  /* The command should NOT be executed before 'build_fabric' */
+  std::vector<ShellCommandId> cmd_dependency_report_reference;
+  cmd_dependency_report_reference.push_back(build_fabric_cmd_id);
+  add_report_reference_command_template<T>(
+    shell, openfpga_setup_cmd_class, cmd_dependency_report_reference, hidden);
+
+  /********************************
+   * Command 'read_unique_blocks'
+   */
+  /* The command should NOT be executed before
+   * 'link_openfpga_arch' */
+  std::vector<ShellCommandId> cmd_dependency_read_unique_blocks_command;
+  cmd_dependency_read_unique_blocks_command.push_back(link_arch_cmd_id);
+  add_read_unique_blocks_command_template<T>(
+    shell, openfpga_setup_cmd_class, cmd_dependency_read_unique_blocks_command,
+    hidden);
+
+  /********************************
+   * Command 'write_unique_blocks'
+   */
+  add_write_unique_blocks_command_template<T>(
+    shell, openfpga_setup_cmd_class, std::vector<ShellCommandId>(), hidden);
+}
 } /* end namespace openfpga */
 
 #endif

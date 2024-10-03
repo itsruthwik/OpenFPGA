@@ -28,6 +28,8 @@ int write_fabric_verilog_template(T& openfpga_ctx, const Command& cmd,
   CommandOptionId opt_output_dir = cmd.option("file");
   CommandOptionId opt_explicit_port_mapping =
     cmd.option("explicit_port_mapping");
+  CommandOptionId opt_constant_undriven_inputs =
+    cmd.option("constant_undriven_inputs");
   CommandOptionId opt_include_timing = cmd.option("include_timing");
   CommandOptionId opt_print_user_defined_template =
     cmd.option("print_user_defined_template");
@@ -56,6 +58,22 @@ int write_fabric_verilog_template(T& openfpga_ctx, const Command& cmd,
   }
   options.set_verbose_output(cmd_context.option_enable(cmd, opt_verbose));
   options.set_compress_routing(openfpga_ctx.flow_manager().compress_routing());
+  /* For perimeter cb, enable the constant-zero undriven inputs, unless it is
+   * defined by user. Throw error if the constant inputs are not selected! */
+  if (cmd_context.option_enable(cmd, opt_constant_undriven_inputs)) {
+    options.set_constant_undriven_inputs(
+      cmd_context.option_value(cmd, opt_constant_undriven_inputs));
+  }
+  if (g_vpr_ctx.device().arch->perimeter_cb) {
+    if (FabricVerilogOption::e_undriven_input_type::NONE ==
+        options.constant_undriven_inputs()) {
+      options.set_constant_undriven_inputs(
+        FabricVerilogOption::e_undriven_input_type::BUS0);
+      VTR_LOG(
+        "Automatically enable the constant_undriven_input option as perimeter "
+        "connection blocks are seen in FPGA fabric\n");
+    }
+  }
 
   return fpga_fabric_verilog(
     openfpga_ctx.mutable_module_graph(),
