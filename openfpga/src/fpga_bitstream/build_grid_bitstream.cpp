@@ -5,6 +5,10 @@
 #include <cmath>
 #include <string>
 
+
+#include <fstream>
+#include <vector>
+
 /* Headers from vtrutil library */
 #include "vtr_assert.h"
 #include "vtr_log.h"
@@ -43,6 +47,39 @@ static std::vector<bool> generate_mode_select_bitstream(
   }
 
   return mode_select_bitstream;
+}
+
+// Todo: remove ruthwik //Read mode bits from a text file and generate a bitstream vector
+static std::vector<bool> read_bits_from_file(const std::string& file_path) {
+  std::vector<size_t> bits_from_file;
+  std::ifstream file(file_path);
+
+  if (!file.is_open()) {
+    std::cerr << "Error: Could not open file " << file_path << std::endl;
+    return {};
+  }
+
+  std::string line;
+  while (std::getline(file, line)) {
+    // Skip lines starting with //
+    if (line.rfind("//", 0) == 0) {
+      continue;
+    }
+
+    std::istringstream iss(line);
+    size_t bit;
+    while (iss >> bit) {
+      /* Error out for unexpected bits */
+      if (bit != 0 && bit != 1) {
+        std::cerr << "Error: Unexpected bit value " << bit << " in file " << file_path << std::endl;
+        return {};
+      }
+      bits_from_file.push_back(bit);
+    }
+  }
+
+  file.close();
+  return generate_mode_select_bitstream(bits_from_file);
 }
 
 /********************************************************************
@@ -132,6 +169,156 @@ static void build_primitive_bitstream(
   VTR_ASSERT(
     mode_select_bitstream.size() ==
     module_manager.module_port(mem_module, mem_out_port_id).get_width());
+
+  /* If there is a feedthrough module, we should consider the scoreboard */
+  std::string feedthru_mem_block_name =
+    generate_memory_module_name(circuit_lib, primitive_model, sram_models[0],
+                                std::string(MEMORY_MODULE_POSTFIX), true);
+  ModuleId feedthru_mem_module =
+    module_manager.find_module(feedthru_mem_block_name);
+  if (module_manager.valid_module_id(feedthru_mem_module)) {
+    auto result = grouped_mem_inst_scoreboard.find(mem_block_name);
+    if (result == grouped_mem_inst_scoreboard.end()) {
+      /* Update scoreboard */
+      grouped_mem_inst_scoreboard[mem_block_name] = 0;
+    } else {
+      grouped_mem_inst_scoreboard[mem_block_name]++;
+      mem_block_name = generate_instance_name(
+        mem_block_name, grouped_mem_inst_scoreboard[mem_block_name]);
+    }
+  }
+
+  /* Create a block for the bitstream which corresponds to the memory module
+   * associated to the LUT */
+  ConfigBlockId mem_block = bitstream_manager.add_block(mem_block_name);
+  bitstream_manager.add_child_block(parent_configurable_block, mem_block);
+
+  VTR_LOGV(verbose, "Added %lu bits to '%s' under '%s'\n",
+           mode_select_bitstream.size(),
+           bitstream_manager.block_name(mem_block).c_str(),
+           bitstream_manager.block_name(parent_configurable_block).c_str());
+
+  /* Add the bitstream to the bitstream manager */
+  bitstream_manager.add_block_bits(mem_block, mode_select_bitstream);
+}
+
+/*****TODO: Remove function after test: Ruthwik  */
+static void build_primitive_bitstream_hardlogic(
+  BitstreamManager& bitstream_manager,
+  std::map<std::string, size_t>& grouped_mem_inst_scoreboard,
+  const ConfigBlockId& parent_configurable_block,
+  const ModuleManager& module_manager, const CircuitLibrary& circuit_lib,
+  const VprDeviceAnnotation& device_annotation, const PhysicalPb& physical_pb,
+  const PhysicalPbId& primitive_pb_id, t_pb_type* primitive_pb_type,
+  const bool& verbose) {
+  /* Ensure a valid physical pritimive pb */
+  if (nullptr == primitive_pb_type) {
+    VTR_LOGF_ERROR(__FILE__, __LINE__, "Invalid primitive_pb_type!\n");
+    exit(1);
+  }
+
+  CircuitModelId primitive_model =
+    device_annotation.pb_type_circuit_model(primitive_pb_type);
+
+  VTR_ASSERT(CircuitModelId::INVALID() != primitive_model);
+  VTR_ASSERT(
+    (CIRCUIT_MODEL_IOPAD == circuit_lib.model_type(primitive_model)) ||
+    (CIRCUIT_MODEL_HARDLOGIC == circuit_lib.model_type(primitive_model)) ||
+    (CIRCUIT_MODEL_FF == circuit_lib.model_type(primitive_model)));
+
+  /* Find SRAM ports for mode-selection */
+  std::vector<CircuitPortId> primitive_mode_select_ports =
+    find_circuit_mode_select_sram_ports(circuit_lib, primitive_model);
+
+  /* We may have a port for mode select or not. */
+  VTR_ASSERT((0 == primitive_mode_select_ports.size()) ||
+             (1 == primitive_mode_select_ports.size()));
+
+  /* Find size of sram ports on the module */
+  std::vector<CircuitModelId> sram_models =
+    find_circuit_sram_models(circuit_lib, primitive_model);
+  VTR_ASSERT(1 == sram_models.size());
+
+  std::string mem_block_name =
+    generate_memory_module_name(circuit_lib, primitive_model, sram_models[0],
+                                std::string(MEMORY_MODULE_POSTFIX));
+  ModuleId mem_module = module_manager.find_module(mem_block_name);
+  VTR_ASSERT(true == module_manager.valid_module_id(mem_module));
+  ModulePortId mem_out_port_id = module_manager.find_module_port(
+    mem_module, generate_configurable_memory_data_out_name());
+
+  size_t size_of_sram_port = module_manager.module_port(mem_module, mem_out_port_id).get_width();
+  
+
+  if (0 == size_of_sram_port) {
+    /* There are no SRAM ports to generate bitstream */
+    return; /* Nothing to do, return directly */
+  }
+
+  /* Generate bitstream for mode-select ports */
+  std::vector<bool> mode_select_bitstream;
+
+  if (0 == primitive_mode_select_ports.size()) {
+    /* There are no mode select ports but there are sram ports; Parse the bitstream from a file */
+    /* primitive_pb_id is the same thing as place_annotation.grid_blocks(grid_coord)[0]; it is -1 (PhysicalPbId::INVALID()) when tjis location is not used */
+    if (primitive_pb_id == PhysicalPbId::INVALID()) { 
+      for (size_t i = 0; i < size_of_sram_port; i++) {
+        mode_select_bitstream.push_back(0);
+      }
+    } else {
+      std::vector<bool> bitstream_from_file = read_bits_from_file("./noc_bitstream.txt");
+      mode_select_bitstream = bitstream_from_file;
+    }
+  } else if (true == physical_pb.valid_pb_id(primitive_pb_id)) {
+    mode_select_bitstream =
+      generate_mode_select_bitstream(physical_pb.mode_bits(primitive_pb_id));
+    /* If the physical pb contains fixed mode-select bitstream, overload here */
+    if (false ==
+        physical_pb.fixed_mode_select_bitstream(primitive_pb_id).empty()) {
+      std::string fixed_mode_select_bitstream =
+        physical_pb.fixed_mode_select_bitstream(primitive_pb_id);
+      size_t mode_bits_start_index =
+        physical_pb.fixed_mode_select_bitstream_offset(primitive_pb_id);
+      /* Ensure the length matches!!! */
+      if (mode_select_bitstream.size() - mode_bits_start_index <
+          fixed_mode_select_bitstream.size()) {
+        VTR_LOG_ERROR(
+          "Unmatched length of fixed mode_select_bitstream %s!Expected to be "
+          "less than %ld bits\n",
+          fixed_mode_select_bitstream.c_str(),
+          mode_select_bitstream.size() - mode_bits_start_index);
+        exit(1);
+      }
+      /* Overload the bitstream here */
+
+      for (size_t bit_index = 0; bit_index < fixed_mode_select_bitstream.size();
+           ++bit_index) {
+        VTR_ASSERT('0' == fixed_mode_select_bitstream[bit_index] ||
+                   '1' == fixed_mode_select_bitstream[bit_index]);
+        mode_select_bitstream[bit_index + mode_bits_start_index] =
+          ('1' == fixed_mode_select_bitstream[bit_index]);
+      }
+    }
+  } else { /* get default mode_bits */
+    mode_select_bitstream = generate_mode_select_bitstream(
+      device_annotation.pb_type_mode_bits(primitive_pb_type));
+  }
+
+  /* Ensure the length of bitstream matches the size of memory circuits */
+  // std::vector<CircuitModelId> sram_models =
+  //   find_circuit_sram_models(circuit_lib, primitive_model);
+  // VTR_ASSERT(1 == sram_models.size());
+
+  // std::string mem_block_name =
+  //   generate_memory_module_name(circuit_lib, primitive_model, sram_models[0],
+  //                               std::string(MEMORY_MODULE_POSTFIX));
+  // ModuleId mem_module = module_manager.find_module(mem_block_name);
+  // VTR_ASSERT(true == module_manager.valid_module_id(mem_module));
+  // ModulePortId mem_out_port_id = module_manager.find_module_port(
+  //   mem_module, generate_configurable_memory_data_out_name());
+  VTR_ASSERT(
+    mode_select_bitstream.size() ==
+    module_manager.module_port(mem_module, mem_out_port_id).get_width()); // errror here
 
   /* If there is a feedthrough module, we should consider the scoreboard */
   std::string feedthru_mem_block_name =
@@ -793,8 +980,13 @@ static void rec_build_physical_block_bitstream(
                             module_manager, circuit_lib, mux_lib, physical_pb,
                             pb_id, physical_pb_type, verbose);
         break;
-      case CIRCUIT_MODEL_FF:
       case CIRCUIT_MODEL_HARDLOGIC:
+        build_primitive_bitstream_hardlogic(
+          bitstream_manager, grouped_mem_inst_scoreboard, pb_configurable_block,
+          module_manager, circuit_lib, device_annotation, physical_pb, pb_id,
+          physical_pb_type, verbose);
+        break;
+      case CIRCUIT_MODEL_FF:
       case CIRCUIT_MODEL_IOPAD:
         /* For other types of blocks, we can apply a generic therapy */
         build_primitive_bitstream(
