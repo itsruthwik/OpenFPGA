@@ -89,6 +89,7 @@ static std::vector<size_t> find_physical_tile_pin_id(
   std::vector<size_t> pin_ids;
 
   /* Walk through the port of the tile */
+  int subtile_id = 0; 
   for (const t_sub_tile& sub_tile : physical_tile->sub_tiles) {
     for (const t_physical_tile_port& physical_tile_port : sub_tile.ports) {
       if (std::string(physical_tile_port.name) != tile_port.get_name()) {
@@ -126,9 +127,11 @@ static std::vector<size_t> find_physical_tile_pin_id(
         exit(1);
       }
       for (const size_t& ipin : tile_port.pins()) {
+        /*Use subtile id to scale based on number of pins per sub tile instead of ipin*/
         int pin_id = physical_tile_port.absolute_first_pin_index +
-                     ipin * sub_tile.num_phy_pins / sub_tile.capacity.total() +
-                     ipin;
+        //            ipin * sub_tile.num_phy_pins / sub_tile.capacity.total() +
+                      subtile_id * sub_tile.num_phy_pins / sub_tile.capacity.total() +
+                      ipin;
         VTR_ASSERT(pin_id < physical_tile->num_pins);
         /* Check if the pin is located on the wanted side */
         if (true == is_pin_locate_at_physical_tile_side(
@@ -138,6 +141,7 @@ static std::vector<size_t> find_physical_tile_pin_id(
         }
       }
     }
+    subtile_id++;
   }
 
   return pin_ids;
