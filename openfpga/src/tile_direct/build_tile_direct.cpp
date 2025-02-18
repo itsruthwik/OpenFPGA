@@ -60,14 +60,14 @@ static std::string parse_direct_port(const std::string& direct_tile_inf) {
 
 /***************************************************************************************
  * Check if a pin is located on a given side of physical tile
- * If the given side is NUM_SIDES, we will search all the sides
+ * If the given side is NUM_2D_SIDES, we will search all the sides
  ***************************************************************************************/
 static bool is_pin_locate_at_physical_tile_side(
   t_physical_tile_type_ptr physical_tile, const size_t& pin_width_offset,
   const size_t& pin_height_offset, const size_t& pin_id,
   const e_side& pin_side) {
-  if (NUM_SIDES == pin_side) {
-    for (size_t side = 0; side < NUM_SIDES; ++side) {
+  if (NUM_2D_SIDES == pin_side) {
+    for (size_t side = 0; side < NUM_2D_SIDES; ++side) {
       if (true == physical_tile->pinloc[pin_width_offset][pin_height_offset]
                                        [side][pin_id]) {
         return true;
@@ -359,8 +359,9 @@ static void report_direct_from_port_and_to_port_mismatch(
     "From_port '%s[%lu:%lu] of direct '%s' does not match to_port "
     "'%s[%lu:%lu]'!\n",
     from_tile_port.get_name().c_str(), from_tile_port.get_lsb(),
-    from_tile_port.get_msb(), vpr_direct.name, to_tile_port.get_name().c_str(),
-    to_tile_port.get_lsb(), to_tile_port.get_msb());
+    from_tile_port.get_msb(), vpr_direct.name.c_str(),
+    to_tile_port.get_name().c_str(), to_tile_port.get_lsb(),
+    to_tile_port.get_msb());
 }
 
 /***************************************************************************************
@@ -422,7 +423,7 @@ static void build_inner_column_row_tile_direct(
       }
 
       /* Search all the sides, the from pin may locate any side!
-       * Note: the vpr_direct.from_side is NUM_SIDES, which is unintialized
+       * Note: the vpr_direct.from_side is NUM_2D_SIDES, which is unintialized
        * This should be reported to VPR!!!
        */
       for (const e_side& from_side : {TOP, RIGHT, BOTTOM, LEFT}) {
@@ -457,7 +458,7 @@ static void build_inner_column_row_tile_direct(
         }
 
         /* Search all the sides, the to pin may locate any side!
-         * Note: the vpr_direct.to_side is NUM_SIDES, which is unintialized
+         * Note: the vpr_direct.to_side is NUM_2D_SIDES, which is unintialized
          * This should be reported to VPR!!!
          */
         for (const e_side& to_side : {TOP, RIGHT, BOTTOM, LEFT}) {
@@ -486,10 +487,10 @@ static void build_inner_column_row_tile_direct(
                      "%s[%lu][%lu].%s[%lu] at side '%s'\n",
                      from_tile_name.c_str(), x, y,
                      from_tile_port.get_name().c_str(), from_pins[ipin],
-                     SIDE_STRING[from_side], to_tile_name.c_str(),
+                     TOTAL_2D_SIDE_STRINGS[from_side], to_tile_name.c_str(),
                      to_grid_coord.x(), to_grid_coord.y(),
                      to_tile_port.get_name().c_str(), to_pins[ipin],
-                     SIDE_STRING[to_side]);
+                     TOTAL_2D_SIDE_STRINGS[to_side]);
             TileDirectId tile_direct_id = tile_direct.add_direct(
               from_grid_coord, from_side, from_pins[ipin], to_grid_coord,
               to_side, to_pins[ipin]);
@@ -597,7 +598,7 @@ static void build_inter_column_row_tile_direct(
       }
 
       /* Search all the sides, the from pin may locate any side!
-       * Note: the vpr_direct.from_side is NUM_SIDES, which is unintialized
+       * Note: the vpr_direct.from_side is NUM_2D_SIDES, which is unintialized
        * This should be reported to VPR!!!
        */
       for (const e_side& from_side : {TOP, RIGHT, BOTTOM, LEFT}) {
@@ -627,7 +628,7 @@ static void build_inter_column_row_tile_direct(
         }
 
         /* Search all the sides, the to pin may locate any side!
-         * Note: the vpr_direct.to_side is NUM_SIDES, which is unintialized
+         * Note: the vpr_direct.to_side is NUM_2D_SIDES, which is unintialized
          * This should be reported to VPR!!!
          */
         for (const e_side& to_side : {TOP, RIGHT, BOTTOM, LEFT}) {
@@ -659,10 +660,10 @@ static void build_inter_column_row_tile_direct(
                      "%s[%lu][%lu].%s[%lu] at side '%s'\n",
                      from_tile_name.c_str(), from_grid_coord.x(),
                      from_grid_coord.y(), from_tile_port.get_name().c_str(),
-                     from_pins[ipin], SIDE_STRING[from_side],
+                     from_pins[ipin], TOTAL_2D_SIDE_STRINGS[from_side],
                      to_tile_name.c_str(), to_grid_coord.x(), to_grid_coord.y(),
                      to_tile_port.get_name().c_str(), to_pins[ipin],
-                     SIDE_STRING[to_side]);
+                     TOTAL_2D_SIDE_STRINGS[to_side]);
 
             TileDirectId tile_direct_id = tile_direct.add_direct(
               from_grid_coord, from_side, from_pins[ipin], to_grid_coord,
@@ -708,7 +709,7 @@ static void build_inter_column_row_tile_direct(
     }
 
     /* Search all the sides, the from pin may locate any side!
-     * Note: the vpr_direct.from_side is NUM_SIDES, which is unintialized
+     * Note: the vpr_direct.from_side is NUM_2D_SIDES, which is unintialized
      * This should be reported to VPR!!!
      */
     for (const e_side& from_side : {TOP, RIGHT, BOTTOM, LEFT}) {
@@ -738,7 +739,7 @@ static void build_inter_column_row_tile_direct(
       }
 
       /* Search all the sides, the to pin may locate any side!
-       * Note: the vpr_direct.to_side is NUM_SIDES, which is unintialized
+       * Note: the vpr_direct.to_side is NUM_2D_SIDES, which is unintialized
        * This should be reported to VPR!!!
        */
       for (const e_side& to_side : {TOP, RIGHT, BOTTOM, LEFT}) {
@@ -770,10 +771,10 @@ static void build_inter_column_row_tile_direct(
                    "at side '%s'\n",
                    from_tile_name.c_str(), from_grid_coord.x(),
                    from_grid_coord.y(), from_tile_port.get_name().c_str(),
-                   from_pins[ipin], SIDE_STRING[from_side],
+                   from_pins[ipin], TOTAL_2D_SIDE_STRINGS[from_side],
                    to_tile_name.c_str(), to_grid_coord.x(), to_grid_coord.y(),
                    to_tile_port.get_name().c_str(), to_pins[ipin],
-                   SIDE_STRING[to_side]);
+                   TOTAL_2D_SIDE_STRINGS[to_side]);
 
           TileDirectId tile_direct_id =
             tile_direct.add_direct(from_grid_coord, from_side, from_pins[ipin],
@@ -798,28 +799,29 @@ TileDirect build_device_tile_direct(const DeviceContext& device_ctx,
   TileDirect tile_direct;
 
   /* Walk through each direct definition in the VPR arch */
-  for (int idirect = 0; idirect < device_ctx.arch->num_directs; ++idirect) {
+  for (size_t idirect = 0; idirect < device_ctx.arch->directs.size();
+       ++idirect) {
     ArchDirectId arch_direct_id =
-      arch_direct.direct(std::string(device_ctx.arch->Directs[idirect].name));
+      arch_direct.direct(std::string(device_ctx.arch->directs[idirect].name));
     if (ArchDirectId::INVALID() == arch_direct_id) {
       VTR_LOG_ERROR(
         "Unable to find an annotation in openfpga architecture XML for "
         "<direct> '%s'!\n",
-        device_ctx.arch->Directs[idirect].name);
+        device_ctx.arch->directs[idirect].name.c_str());
       exit(1);
     }
     /* Build from original VPR arch definition */
     if (e_direct_type::INNER_COLUMN_OR_ROW ==
         arch_direct.type(arch_direct_id)) {
       build_inner_column_row_tile_direct(tile_direct,
-                                         device_ctx.arch->Directs[idirect],
+                                         device_ctx.arch->directs[idirect],
                                          device_ctx, arch_direct_id, verbose);
       /* Skip those direct connections which belong part of a connection block
        */
     }
     /* Build from OpenFPGA arch definition */
     build_inter_column_row_tile_direct(
-      tile_direct, device_ctx.arch->Directs[idirect], device_ctx, arch_direct,
+      tile_direct, device_ctx.arch->directs[idirect], device_ctx, arch_direct,
       arch_direct_id, verbose);
   }
 

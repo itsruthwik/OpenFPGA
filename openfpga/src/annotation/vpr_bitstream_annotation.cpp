@@ -40,6 +40,17 @@ std::string VprBitstreamAnnotation::pb_type_bitstream_content(
   return std::string();
 }
 
+std::string VprBitstreamAnnotation::pb_type_default_mode_bits(
+  t_pb_type* pb_type) const {
+  auto result = default_mode_bits_.find(pb_type);
+  if (result != default_mode_bits_.end()) {
+    return result->second;
+  }
+
+  /* Not found, return an invalid type */
+  return std::string();
+}
+
 size_t VprBitstreamAnnotation::pb_type_bitstream_offset(
   t_pb_type* pb_type) const {
   auto result = bitstream_offsets_.find(pb_type);
@@ -96,6 +107,17 @@ size_t VprBitstreamAnnotation::interconnect_default_path_id(
   return DEFAULT_PATH_ID;
 }
 
+ClockTreePinId VprBitstreamAnnotation::clock_tap_routing_pin(
+  const ClockTreeId& tree_id) const {
+  auto result = clock_tap_routing_pins_.find(tree_id);
+  if (result != clock_tap_routing_pins_.end()) {
+    return result->second;
+  }
+
+  /* Not found, return an invalid input id */
+  return ClockTreePinId::INVALID();
+}
+
 /************************************************************************
  * Public mutators
  ***********************************************************************/
@@ -129,9 +151,26 @@ void VprBitstreamAnnotation::set_pb_type_mode_select_bitstream_offset(
   mode_select_bitstream_offsets_[pb_type] = offset;
 }
 
+void VprBitstreamAnnotation::set_pb_type_default_mode_bits(
+  t_pb_type* pb_type, const std::string& default_mode_bits) {
+  default_mode_bits_[pb_type] = default_mode_bits;
+}
+
 void VprBitstreamAnnotation::set_interconnect_default_path_id(
   t_interconnect* interconnect, const size_t& default_path_id) {
   interconnect_default_path_ids_[interconnect] = default_path_id;
+}
+
+void VprBitstreamAnnotation::set_clock_tap_routing_pin(
+  const ClockTreeId& tree_id, const ClockTreePinId& tree_pin_id) {
+  auto result = clock_tap_routing_pins_.find(tree_id);
+  if (result != clock_tap_routing_pins_.end()) {
+    VTR_LOG_WARN(
+      "Overwrite the clock tree pin '%lu' for clock tree '%d' tap routing (Was "
+      "pin '%lu')\n",
+      size_t(tree_pin_id), size_t(tree_id), size_t(result->second));
+  }
+  clock_tap_routing_pins_[tree_id] = tree_pin_id;
 }
 
 } /* End namespace openfpga*/

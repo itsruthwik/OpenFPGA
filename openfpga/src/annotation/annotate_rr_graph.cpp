@@ -120,7 +120,7 @@ static RRGSB build_rr_gsb(const DeviceContext& vpr_device_ctx,
       rr_gsb.get_side_block_coordinate(side_manager.get_side());
     RRChan rr_chan;
     std::vector<std::vector<RRNodeId>> temp_opin_rr_nodes(2);
-    enum e_side opin_grid_side[2] = {NUM_SIDES, NUM_SIDES};
+    enum e_side opin_grid_side[2] = {NUM_2D_SIDES, NUM_2D_SIDES};
     enum PORTS chan_dir_to_port_dir_mapping[2] = {
       OUT_PORT, IN_PORT}; /* 0: INC_DIRECTION => ?; 1: DEC_DIRECTION => ? */
 
@@ -301,8 +301,8 @@ static RRGSB build_rr_gsb(const DeviceContext& vpr_device_ctx,
     /* Clear the temp data */
     temp_opin_rr_nodes[0].clear();
     temp_opin_rr_nodes[1].clear();
-    opin_grid_side[0] = NUM_SIDES;
-    opin_grid_side[1] = NUM_SIDES;
+    opin_grid_side[0] = NUM_2D_SIDES;
+    opin_grid_side[1] = NUM_2D_SIDES;
   }
 
   /* Side: TOP => 0, RIGHT => 1, BOTTOM => 2, LEFT => 3 */
@@ -554,6 +554,12 @@ static void annotate_rr_switch_circuit_models(
        rr_switch_id++) {
     std::string switch_name(
       vpr_device_ctx.rr_graph.rr_switch()[RRSwitchId(rr_switch_id)].name);
+
+    /* Skip flat router-generated internal switches */
+    if (switch_name.rfind(VPR_INTERNAL_SWITCH_NAME, 0) == 0) {
+      continue;
+    }
+
     /* Skip the delayless switch, which is only used by the edges between
      * - SOURCE and OPIN
      * - IPIN and SINK
@@ -680,8 +686,9 @@ static void annotate_direct_circuit_models(
   VprDeviceAnnotation& vpr_device_annotation, const bool& verbose_output) {
   size_t count = 0;
 
-  for (int idirect = 0; idirect < vpr_device_ctx.arch->num_directs; ++idirect) {
-    std::string direct_name = vpr_device_ctx.arch->Directs[idirect].name;
+  for (size_t idirect = 0; idirect < vpr_device_ctx.arch->directs.size();
+       ++idirect) {
+    std::string direct_name = vpr_device_ctx.arch->directs[idirect].name;
     /* The name-to-circuit mapping is stored in either cb_switch-to-circuit or
      * sb_switch-to-circuit, Try to find one and update the device annotation
      */

@@ -90,12 +90,10 @@ int link_arch_template(T& openfpga_ctx, const Command& cmd,
   // rr_graph from an external file
   g_vpr_ctx.mutable_device().rr_graph_builder.build_in_edges();
   annotate_vpr_rr_node_nets(g_vpr_ctx.device(), g_vpr_ctx.clustering(),
-                            g_vpr_ctx.routing(),
                             openfpga_ctx.mutable_vpr_routing_annotation(),
                             cmd_context.option_enable(cmd, opt_verbose));
 
   annotate_rr_node_previous_nodes(g_vpr_ctx.device(), g_vpr_ctx.clustering(),
-                                  g_vpr_ctx.routing(),
                                   openfpga_ctx.mutable_vpr_routing_annotation(),
                                   cmd_context.option_enable(cmd, opt_verbose));
 
@@ -179,7 +177,7 @@ int link_arch_template(T& openfpga_ctx, const Command& cmd,
   if (CMD_EXEC_FATAL_ERROR ==
       annotate_bitstream_setting(
         openfpga_ctx.bitstream_setting(), g_vpr_ctx.device(),
-        openfpga_ctx.vpr_device_annotation(),
+        openfpga_ctx.clock_arch(), openfpga_ctx.mutable_vpr_device_annotation(),
         openfpga_ctx.mutable_vpr_bitstream_annotation())) {
     return CMD_EXEC_FATAL_ERROR;
   }
@@ -235,7 +233,8 @@ int route_clock_rr_graph_template(T& openfpga_ctx, const Command& cmd,
     openfpga_ctx.mutable_vpr_routing_annotation(),
     openfpga_ctx.vpr_clustering_annotation(), g_vpr_ctx.device(),
     g_vpr_ctx.clustering().clb_nlist, g_vpr_ctx.placement(),
-    openfpga_ctx.clock_rr_lookup(), openfpga_ctx.clock_arch(), pin_constraints,
+    openfpga_ctx.vpr_bitstream_annotation(), openfpga_ctx.clock_rr_lookup(),
+    openfpga_ctx.clock_arch(), pin_constraints,
     cmd_context.option_enable(cmd, opt_disable_unused_trees),
     cmd_context.option_enable(cmd, opt_disable_unused_spines),
     cmd_context.option_enable(cmd, opt_verbose));
