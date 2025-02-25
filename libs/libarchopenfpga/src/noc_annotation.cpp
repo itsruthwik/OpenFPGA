@@ -29,7 +29,7 @@ void NocAnnotation::set_circuit_model(const std::string& circuit_model) {
   circuit_model_ = circuit_model;
 }
 
-void NocAnnotation::set_noc_port(const std::string& side, const std::vector<openfpga::BasicPort>& input_ports, const std::vector<openfpga::BasicPort>& output_ports) {
+void NocAnnotation::set_noc_port(const enum e_side& side, const std::vector<openfpga::BasicPort>& input_ports, const std::vector<openfpga::BasicPort>& output_ports) {
   noc_port_inputs_[side] = input_ports;
   noc_port_outputs_[side] = output_ports;
 }
@@ -48,7 +48,7 @@ const std::string& NocAnnotation::circuit_model() const {
   return circuit_model_;
 }
 
-const std::map<std::string, std::vector<openfpga::BasicPort>>& NocAnnotation::noc_ports(const std::string& side) const{
+const std::map<std::string, std::vector<openfpga::BasicPort>>& NocAnnotation::noc_ports(const enum e_side& side) const{
   static std::map<std::string, std::vector<openfpga::BasicPort>> combined_ports;
   combined_ports.clear();
   combined_ports["inputs"] = noc_port_inputs_.at(side);
@@ -56,11 +56,11 @@ const std::map<std::string, std::vector<openfpga::BasicPort>>& NocAnnotation::no
   return combined_ports;
 }
 
-const std::vector<openfpga::BasicPort>& NocAnnotation::noc_port_inputs(const std::string& side) const{
+const std::vector<openfpga::BasicPort>& NocAnnotation::noc_port_inputs(const enum e_side& side) const{
     return noc_port_inputs_.at(side);
 }
 
-const std::vector<openfpga::BasicPort>& NocAnnotation::noc_port_outputs(const std::string& side) const{
+const std::vector<openfpga::BasicPort>& NocAnnotation::noc_port_outputs(const enum e_side& side) const{
     return noc_port_outputs_.at(side);
 }
 
