@@ -12,6 +12,7 @@
 #include "annotate_placement.h"
 #include "annotate_rr_graph.h"
 #include "annotate_simulation_setting.h"
+#include "annotate_noc.h"
 #include "append_clock_rr_graph.h"
 #include "build_tile_direct.h"
 #include "command.h"
@@ -63,6 +64,10 @@ int link_arch_template(T& openfpga_ctx, const Command& cmd,
   annotate_pb_types(g_vpr_ctx.device(), openfpga_ctx.arch(),
                     openfpga_ctx.mutable_vpr_device_annotation(),
                     cmd_context.option_enable(cmd, opt_verbose));
+  
+  annotate_noc(g_vpr_ctx.noc(), g_vpr_ctx.device(), openfpga_ctx.arch(),
+               openfpga_ctx.mutable_vpr_device_annotation(),
+               cmd_context.option_enable(cmd, opt_verbose));
 
   /* Annotate pb_graph_nodes
    * - Give unique index to each node in the same type

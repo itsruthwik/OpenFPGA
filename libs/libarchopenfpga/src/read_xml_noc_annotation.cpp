@@ -62,16 +62,7 @@ static void read_xml_noc_port(
   openfpga::MultiPortParser noc_port_output_parser(noc_port_outputs_string);
   const std::vector<openfpga::BasicPort>& noc_port_outputs_attr = noc_port_output_parser.ports();
 
-  /* set noc_port */
-  // if (noc_port_side_attr.empty()) {
-  //   /* Error out if side is missing*/
-  //   archfpga_throw(loc_data.filename_c_str(), loc_data.line(xml_noc_port),
-  //                  "Missing required 'side' attribute in <noc_port> tag!\n");
-  // } else if (noc_port_side_attr != "TOP" && noc_port_side_attr != "BOTTOM" && noc_port_side_attr != "LEFT" && noc_port_side_attr != "RIGHT") {
-  //   /* Error out if side is not top, bottom, left or right*/
-  //   archfpga_throw(loc_data.filename_c_str(), loc_data.line(xml_noc_port),
-  //                  "Invalid 'side' attribute in <noc_port> tag! Expecting 'TOP', 'BOTTOM', 'LEFT' or 'RIGHT'\n");
-  // } else 
+
   if (noc_port_inputs_attr.empty()) {
     /* Error out if input_pins is missing*/
     archfpga_throw(loc_data.filename_c_str(), loc_data.line(xml_noc_port),
