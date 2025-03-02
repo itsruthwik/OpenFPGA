@@ -7,6 +7,8 @@
 
 #include "vtr_assert.h"
 #include "vtr_log.h"
+#include "tile_direct.h"
+
 
 /* namespace openfpga begins */
 namespace openfpga {
@@ -455,6 +457,30 @@ int VprDeviceAnnotation::physical_tile_z_to_start_pin_index(
   return pin_search_result->second;
 }
 
+// std::vector<int> VprDeviceAnnotation::get_noc_router_ids() const {
+//   std::vector<int> ids;
+//   for (const auto& router_coord : noc_router_coords_) {
+//     ids.push_back(router_coord.first);
+//   }
+//   return ids;
+// }
+
+// vtr::Point<size_t> VprDeviceAnnotation::noc_router_coords(const int& id) const {
+//   return noc_router_coords_.at(id);
+// }
+
+// std::vector<int> VprDeviceAnnotation::get_noc_router_direct_ids() const {
+//   std::vector<int> ids;
+//   for (const auto& router_direct : noc_router_directs_) {
+//     ids.push_back(router_direct.first);
+//   }
+//   return ids;
+// }
+
+// TileDirect VprDeviceAnnotation::noc_router_direct(const int& id) const {
+//   return noc_router_directs_.at(id);
+// }
+
 /************************************************************************
  * Public mutators
  ***********************************************************************/
@@ -824,4 +850,7 @@ void VprDeviceAnnotation::add_physical_tile_z_to_start_pin_index(
     start_pin_index;
 }
 
+// void VprDeviceAnnotation::add_noc_router(const int& router_id, const vtr::Point<size_t>& coords) {
+//   noc_router_coords_[router_id] = coords;
+// }
 } /* End namespace openfpga*/

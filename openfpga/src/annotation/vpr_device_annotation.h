@@ -99,6 +99,11 @@ class VprDeviceAnnotation {
   int physical_tile_z_to_start_pin_index(t_physical_tile_type_ptr physical_tile,
                                          const int& subtile_z) const;
 
+  // std::vector<int> get_noc_router_ids() const;
+  // vtr::Point<size_t> noc_router_coords(const int& id) const;
+  // std::vector<int> get_noc_router_direct_ids() const;
+  // TileDirect noc_router_direct(const int& id) const;
+
  public: /* Public mutators */
   void add_pb_type_physical_mode(t_pb_type* pb_type, t_mode* physical_mode);
   void add_physical_pb_type(t_pb_type* operating_pb_type,
@@ -157,6 +162,9 @@ class VprDeviceAnnotation {
   void add_physical_tile_z_to_start_pin_index(
     t_physical_tile_type_ptr physical_tile, const int& subtile_z,
     const int& start_pin_index);
+
+  // void add_noc_router(const int& router_id, const vtr::Point<size_t>& coords);
+  // void add_noc_router_direct(const int& link_id, const TileDirect& direct);
 
  private: /* Internal data */
   /* Pair a regular pb_type to its physical pb_type */
@@ -270,6 +278,12 @@ class VprDeviceAnnotation {
    */
   std::map<t_physical_tile_type_ptr, std::map<int, int>>
     physical_tile_z_to_start_pin_indices_;
+  
+    /* noc*/
+  // considering this as id, x_pos y_pos
+  // std::map<int, vtr::Point<size_t>> noc_router_coords_;
+  // std::map<int, TileDirect> noc_router_directs_;
+  
 };
 
 } /* End namespace openfpga*/
