@@ -12,9 +12,9 @@
 #include "annotate_placement.h"
 #include "annotate_rr_graph.h"
 #include "annotate_simulation_setting.h"
-#include "annotate_noc.h"
 #include "append_clock_rr_graph.h"
 #include "build_tile_direct.h"
+#include "build_noc_direct.h"
 #include "command.h"
 #include "command_context.h"
 #include "command_exit_codes.h"
@@ -65,9 +65,9 @@ int link_arch_template(T& openfpga_ctx, const Command& cmd,
                     openfpga_ctx.mutable_vpr_device_annotation(),
                     cmd_context.option_enable(cmd, opt_verbose));
   
-  annotate_noc(g_vpr_ctx.noc(), g_vpr_ctx.device(), openfpga_ctx.arch(),
-               openfpga_ctx.mutable_vpr_device_annotation(),
-               cmd_context.option_enable(cmd, opt_verbose));
+  // annotate_noc(g_vpr_ctx.noc(), g_vpr_ctx.device(), openfpga_ctx.arch(),
+  //              openfpga_ctx.mutable_vpr_device_annotation(),
+  //              cmd_context.option_enable(cmd, opt_verbose));
 
   /* Annotate pb_graph_nodes
    * - Give unique index to each node in the same type
@@ -136,6 +136,12 @@ int link_arch_template(T& openfpga_ctx, const Command& cmd,
   openfpga_ctx.mutable_tile_direct() = build_device_tile_direct(
     g_vpr_ctx.device(), openfpga_ctx.arch().arch_direct,
     cmd_context.option_enable(cmd, opt_verbose));
+
+  /* Build NoC annotation */
+  build_noc_directs( g_vpr_ctx.noc(), g_vpr_ctx.device(), openfpga_ctx.mutable_arch(),
+    openfpga_ctx.mutable_tile_direct(), 
+    openfpga_ctx.mutable_vpr_device_annotation(),
+    cmd_context.option_enable(cmd, opt_verbose));  
 
   /* Annotate clustering results */
   if (CMD_EXEC_FATAL_ERROR ==

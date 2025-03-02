@@ -96,6 +96,7 @@ class OpenfpgaContext : public Context {
     return blwl_sr_banks_;
   }
   const openfpga::TileDirect& tile_direct() const { return tile_direct_; }
+  // const openfpga::Noc& noc() const { return noc_; }
   const openfpga::ModuleManager& module_graph() const { return module_graph_; }
   const openfpga::FlowManager& flow_manager() const { return flow_manager_; }
   const openfpga::BitstreamManager& bitstream_manager() const {
@@ -159,6 +160,7 @@ class OpenfpgaContext : public Context {
     return blwl_sr_banks_;
   }
   openfpga::TileDirect& mutable_tile_direct() { return tile_direct_; }
+  // openfpga::Noc& mutable_noc() { return noc_; }
   openfpga::ModuleManager& mutable_module_graph() { return module_graph_; }
   openfpga::FlowManager& mutable_flow_manager() { return flow_manager_; }
   openfpga::BitstreamManager& mutable_bitstream_manager() {
@@ -220,6 +222,9 @@ class OpenfpgaContext : public Context {
 
   /* Inner/inter-column/row tile direct connections */
   openfpga::TileDirect tile_direct_;
+
+  /* NOC - this includes all the point to point direct connections */
+  // openfpga::Noc noc_;
 
   /* Library of shift register banks that control BLs and WLs
    * @note Only used when memory bank is used as configuration protocol
