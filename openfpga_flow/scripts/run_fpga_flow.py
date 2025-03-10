@@ -77,7 +77,7 @@ parser = argparse.ArgumentParser(formatter_class=formatter)
 parser.add_argument("arch_file", type=str)
 parser.add_argument("benchmark_files", type=str, nargs="+")
 # parser.add_argument('extraArgs', nargs=argparse.REMAINDER)
-parser.add_argument("otherthings", nargs="*")
+# parser.add_argument("otherthings", nargs="*")
 
 # Optional arguments
 parser.add_argument("--top_module", type=str, default="top")
@@ -1061,4 +1061,6 @@ if __name__ == "__main__":
     ExecTime["Start"] = time.time()
     # args = parser.parse_args()
     args, OpenFPGAArgs = parser.parse_known_args()
+    print(args)
+    print("OpenFPGAArgs: ", OpenFPGAArgs, "\n")
     main()
