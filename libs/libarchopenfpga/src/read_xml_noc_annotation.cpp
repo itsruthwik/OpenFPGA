@@ -129,27 +129,35 @@ openfpga::NocAnnotation read_xml_noc_annotation(
   pugi::xml_node xml_noc_annotation =
     get_single_child(Node, "noc_annotation", loc_data, pugiutil::ReqOpt::OPTIONAL);
 
-  /* get router_tile_name from noc_annotation tag in XML architecture description*/
-  const std::string& noc_router_tile_name_attr =
-    get_attribute(xml_noc_annotation, "noc_router_tile_name", loc_data).as_string();
+  if (xml_noc_annotation) {
+    /* get router_tile_name from noc_annotation tag in XML architecture description*/
+    const std::string& noc_router_tile_name_attr =
+      get_attribute(xml_noc_annotation, "noc_router_tile_name", loc_data).as_string();
 
-  if (noc_router_tile_name_attr.empty()) {
-    /* Error out if router_tile_nme is missing*/
-    // bad_tag(xml_noc_annotation, loc_data, xml_annotations, {"noc_annotation"});
-    archfpga_throw(loc_data.filename_c_str(), loc_data.line(xml_noc_annotation),
-                   "Missing 'noc_router_tile_name' attribute in <noc_annotation> tag!\n");
-  } else {
-    noc_annotation.set_noc_router_tile_name(noc_router_tile_name_attr);
-  }
+    if (noc_router_tile_name_attr.empty()) {
+      /* Error out if router_tile_nme is missing*/
+      // bad_tag(xml_noc_annotation, loc_data, xml_annotations, {"noc_annotation"});
+      archfpga_throw(loc_data.filename_c_str(), loc_data.line(xml_noc_annotation),
+                     "Missing 'noc_router_tile_name' attribute in <noc_annotation> tag!\n");
+    } else {
+      noc_annotation.set_noc_router_tile_name(noc_router_tile_name_attr);
+    }
 
-  /* Parse noc_links */
-  if (xml_noc_annotation.children().begin() == xml_noc_annotation.children().end()) {
-    archfpga_throw(loc_data.filename_c_str(), loc_data.line(xml_noc_annotation),
-                   "Missing required <noc_links> child node in <noc_annotation> tag!\n");
-  } else { 
-    pugi::xml_node xml_noc_link = get_single_child(xml_noc_annotation, "noc_links", loc_data);
-    read_xml_noc_link(xml_noc_link, loc_data, noc_annotation);
-  }
+    /* Parse noc_links */
+    if (xml_noc_annotation.children().begin() == xml_noc_annotation.children().end()) {
+      archfpga_throw(loc_data.filename_c_str(), loc_data.line(xml_noc_annotation),
+                     "Missing required <noc_links> child node in <noc_annotation> tag!\n");
+    } else { 
+      pugi::xml_node xml_noc_link = get_single_child(xml_noc_annotation, "noc_links", loc_data);
+      read_xml_noc_link(xml_noc_link, loc_data, noc_annotation);
+    }
+
+  } 
+  // else {
+    // /* Error out if noc_annotation is missing*/
+    // archfpga_throw(loc_data.filename_c_str(), loc_data.line(Node),
+    //                "Missing required <noc_annotation> child node in <openfpga_architecture> tag!\n");
+  // }
 
   return noc_annotation;
 }
