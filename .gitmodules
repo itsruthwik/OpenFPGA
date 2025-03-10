@@ -7,4 +7,4 @@
 [submodule "vtr-verilog-to-routing"]
 	path = vtr-verilog-to-routing
 	url = https://github.com/itsruthwik/vtr-verilog-to-routing.git
-    branch = temp
+    branch = t81
