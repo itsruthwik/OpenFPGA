@@ -509,6 +509,19 @@ def validate_command_line_arguments():
         args.base_verilog = os.path.abspath(args.base_verilog)
 
 
+# def prepare_run_directory(run_dir):
+#     """
+#     Prepares run directory to run
+#     1. Change current directory to run_dir
+#     2. Copy architecture XML file to run_dir
+#     3. Copy circuit files to run_dir
+#     """
+#     logger.info("Run directory : %s" % run_dir)
+#     if os.path.isdir(run_dir):
+#         no_of_files = len(next(os.walk(run_dir))[2])
+#         shutil.rmtree(run_dir)
+#     os.makedirs(run_dir)
+#     # Clean run_dir is created change working directory
 def prepare_run_directory(run_dir):
     """
     Prepares run directory to run
@@ -518,10 +531,38 @@ def prepare_run_directory(run_dir):
     """
     logger.info("Run directory : %s" % run_dir)
     if os.path.isdir(run_dir):
-        no_of_files = len(next(os.walk(run_dir))[2])
-        shutil.rmtree(run_dir)
-    os.makedirs(run_dir)
-    # Clean run_dir is created change working directory
+        # Add error handling for directory removal
+        try:
+            shutil.rmtree(run_dir)
+        except OSError:
+            logger.warning("Failed to remove directory with shutil.rmtree, attempting alternative removal")
+            # Alternative 1: Use system command as fallback
+            import subprocess
+            subprocess.run(["rm", "-rf", run_dir])
+            
+            # Alternative 2: If still failing, try clearing directory first
+            if os.path.isdir(run_dir):
+                for root, dirs, files in os.walk(run_dir, topdown=False):
+                    for name in files:
+                        try:
+                            os.remove(os.path.join(root, name))
+                        except:
+                            pass
+                    for name in dirs:
+                        try:
+                            os.rmdir(os.path.join(root, name))
+                        except:
+                            pass
+                try:
+                    os.rmdir(run_dir)
+                except:
+                    pass
+    
+    # Create directory if it doesn't exist
+    if not os.path.isdir(run_dir):
+        os.makedirs(run_dir)
+
+     # Clean run_dir is created change working directory
     os.chdir(run_dir)
 
     # Create arch dir in run_dir and copy flattened architecture file
@@ -582,16 +623,20 @@ def create_yosys_params():
         logger.info("Extracted lut_size size from arch XML = %s", lut_size)
         logger.info("Running Yosys with lut_size = %s", lut_size)
     except:
+        logger.info("Failed to extract lut_size from XML file")
         logger.exception("Failed to extract lut_size from XML file")
         clean_up_and_exit("")
+    
     args.K = lut_size
+    logger.info("printing args.K :")
     # Yosys script parameter mapping
     ys_params = script_env_vars["PATH"]
 
     for indx in range(0, len(OpenFPGAArgs), 2):
         tmpVar = OpenFPGAArgs[indx][2:].upper()
         ys_params[tmpVar] = OpenFPGAArgs[indx + 1]
-
+    logger.info("printing yosys params  :")
+    logger.info(ys_params)
     if not args.verific:
         ys_params["VERILOG_FILES"] = " ".join(
             [shlex.quote(eachfile) for eachfile in args.benchmark_files]
@@ -640,6 +685,7 @@ def create_yosys_params():
                     for eachdir in ys_params["VERIFIC_LIBRARY_DIR"].split(",")
                 ]
             )
+        logger.info("printing ys_params :")
         try:
             for param, value in ys_params.items():
                 if param.startswith("VERIFIC_READ_LIB_NAME"):
@@ -724,6 +770,9 @@ def create_yosys_params():
     ys_params["OUTPUT_BLIF"] = args.top_module + "_yosys_out.blif"
     ys_params["OUTPUT_VERILOG"] = args.top_module + "_output_verilog.v"
 
+    logger.info("printing ys_params :")
+    logger.info(ys_params)
+    logger.info("final 01") 
     return ys_params
 
 
@@ -731,17 +780,53 @@ def run_yosys_with_abc():
     """
     Execute yosys with ABC and optional blackbox support
     """
+    logger.info("Running Yosys with ABC  11") 
     ys_params = create_yosys_params()
     yosys_template = (
         args.yosys_tmpl
         if args.yosys_tmpl
         else os.path.join(cad_tools["misc_dir"], "ys_tmpl_yosys_vpr_flow.ys")
     )
+    logger.info("Running Yosys with ABC  12")
     tmpl = Template(open(yosys_template, encoding="utf-8").read())
     with open("yosys.ys", "w") as archfile:
         archfile.write(tmpl.safe_substitute(ys_params))
-
-    run_command("Run yosys", "yosys_output.log", [cad_tools["yosys_path"], "yosys.ys"])
+    logger.info("Running Yosys with ABC  13")
+    # run_command("Run yosys", "yosys_output.log", [cad_tools["yosys_path"], "yosys.ys"])
+    
+    # Build the Yosys command
+    yosys_cmd = [cad_tools["yosys_path"], "yosys.ys"]
+    
+    logger.info("Running Yosys  13:")
+    logger.info(" ".join(yosys_cmd))
+    
+    # Open the log file for write
+    with open("yosys_output.log", "w") as log_file:
+        # Run Yosys, capture stdout and stderr, and decode using universal newlines.
+        logger.info("Running Yosys  14:")
+        process = subprocess.run(yosys_cmd,
+                                 stdout=subprocess.PIPE,
+                                 stderr=subprocess.PIPE,
+                                 universal_newlines=True)
+        # Write the outputs to the log file
+        log_file.write(process.stdout)
+        log_file.write(process.stderr)
+        
+        # Also print outputs to the terminal
+        print(process.stdout)
+        print(process.stderr)
+    
+        # # Read and print output line-by-line
+        # while True:
+        #     line = process.stdout.readline()
+        #     if not line and process.poll() is not None:
+        #         break
+        #     if line:
+        #         logger.info(line, end='')        # Print to terminal in real time.
+        #         log_file.write(line)         # Write to the log file.
+        
+        if process.returncode != 0:
+            log_file("Yosys failed with return code", process.returncode)
 
 
 def run_odin2():
@@ -1011,6 +1096,32 @@ def run_netlists_verification(exit_if_fail=True):
     ExecTime["VerificationEnd"] = time.time()
 
 
+# def run_command(taskname, logfile, command, exit_if_fail=True):
+#     logger.info("Launching %s " % taskname)
+#     with open(logfile, "w") as output:
+#         try:
+#             output.write(" ".join(command) + "\n")
+#             process = subprocess.run(
+#                 command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=False
+#             )
+#             output.write(process.stdout.decode("cp1252"))
+#             output.write(process.stderr.decode("cp1252"))
+#             output.write(str(process.returncode))
+#             if "openfpgashell" in logfile:
+#                 filter_openfpga_output(process.stdout.decode("cp1252"))
+#             if process.returncode:
+#                 logger.error("%s run failed with returncode %d" % (taskname, process.returncode))
+#                 logger.error("command %s" % " ".join(command))
+#                 filter_failed_process_output(process.stderr.decode("cp1252"))
+#                 if exit_if_fail:
+#                     clean_up_and_exit("Failed to run %s task" % taskname)
+#         except Exception:
+#             logger.exception("%s failed to execute" % (taskname))
+#             traceback.print_exc(file=output)
+#             if exit_if_fail:
+#                 clean_up_and_exit("Failed to run %s task" % taskname)
+#     logger.info("%s is written in file %s" % (taskname, logfile))
+#     return process.stdout.decode("cp1252")
 def run_command(taskname, logfile, command, exit_if_fail=True):
     logger.info("Launching %s " % taskname)
     with open(logfile, "w") as output:
@@ -1019,15 +1130,16 @@ def run_command(taskname, logfile, command, exit_if_fail=True):
             process = subprocess.run(
                 command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=False
             )
-            output.write(process.stdout.decode("cp1252"))
-            output.write(process.stderr.decode("cp1252"))
+            # Add error handling with 'replace' or use utf-8 instead
+            output.write(process.stdout.decode("utf-8", errors="replace"))
+            output.write(process.stderr.decode("utf-8", errors="replace"))
             output.write(str(process.returncode))
             if "openfpgashell" in logfile:
-                filter_openfpga_output(process.stdout.decode("cp1252"))
+                filter_openfpga_output(process.stdout.decode("utf-8", errors="replace"))
             if process.returncode:
                 logger.error("%s run failed with returncode %d" % (taskname, process.returncode))
                 logger.error("command %s" % " ".join(command))
-                filter_failed_process_output(process.stderr.decode("cp1252"))
+                filter_failed_process_output(process.stderr.decode("utf-8", errors="replace"))
                 if exit_if_fail:
                     clean_up_and_exit("Failed to run %s task" % taskname)
         except Exception:
@@ -1036,8 +1148,7 @@ def run_command(taskname, logfile, command, exit_if_fail=True):
             if exit_if_fail:
                 clean_up_and_exit("Failed to run %s task" % taskname)
     logger.info("%s is written in file %s" % (taskname, logfile))
-    return process.stdout.decode("cp1252")
-
+    return process.stdout.decode("utf-8", errors="replace")
 
 def filter_openfpga_output(vpr_output):
     stdout = iter(vpr_output.split("\n"))

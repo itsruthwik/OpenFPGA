@@ -25,6 +25,8 @@ from string import Template
 import pprint
 from importlib import util
 from collections import OrderedDict
+from contextlib import nullcontext
+
 
 if util.find_spec("coloredlogs"):
     import coloredlogs
@@ -54,7 +56,7 @@ parser.add_argument("tasks", nargs="+")
 parser.add_argument(
     "--maxthreads",
     type=int,
-    default=2,
+    default=1,
     help="Number of fpga_flow threads to run default = 2,"
     + "Typically <= Number of processors on the system",
 )
@@ -119,13 +121,28 @@ def main():
             continue
         eachtask = "_".join(eachtask)
         if not args.test_run:
-            run_actions(job_run_list)
+            # print(job_run_list)
+            for _, eachjob in enumerate(job_run_list):
+                    print(eachjob["name"])
+                    print(eachjob["commands"])
+                    print("//////////////// \n")
+                    print(eachjob)
+
+            if len(job_run_list) == 1:
+                run_single_job(job_run_list[0])
+            else:
+                run_actions(job_run_list)
             if not (GeneralSection.get("fpga_flow") == "yosys"):
                 collect_results(job_run_list)
         else:
             pprint.pprint(job_run_list)
     logger.info("Task execution completed")
     exit(0)
+
+
+
+
+
 
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -316,6 +333,7 @@ def generate_each_task_actions(taskname):
             "verific_include_dir",
             "verific_library_dir",
             "verific_search_lib",
+            "router_blackbox_verilog",
         ]
 
         yosys_params_common = {}
@@ -587,6 +605,96 @@ def run_single_script(s, eachJob, job_list):
         eachJob["finished"] = True
         no_of_finished_job = sum([not eachJ["finished"] for eachJ in job_list])
         logger.info("***** %d runs pending *****", no_of_finished_job)
+
+
+
+# Simplified version for a single job
+def run_single_job(eachJob):
+    """Run a single job without threading/semaphores."""
+    eachJob["starttime"] = time.time()
+    job_name = eachJob["name"]
+    logfile = f"{job_name}_out.log"
+    command = [
+        os.getenv("PYTHON_EXEC", gc["python_path"]),
+        gc["script_default"],
+    ] + eachJob["commands"]
+
+    logger.info("Running job [%s] with command: %s", job_name, " ".join(command))
+    with open(logfile, "w+") as output:
+        output.write("* " * 20 + "\n")
+        output.write("RunDirectory : %s\n" % os.getcwd())
+        output.write("Command: " + " ".join(command) + "\n")
+        output.write("* " * 20 + "\n")
+        
+        process = subprocess.Popen(
+            command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            universal_newlines=True,
+        )
+        # try:
+        #     # Wait up to 600 seconds for the job to finish.
+        #     stdout_data, _ = process.communicate(timeout=600)
+        # except subprocess.TimeoutExpired:
+        #     logger.error("Process timed out for job [%s]. Killing process.", job_name)
+        #     process.kill()
+        #     stdout_data, _ = process.communicate()
+        #     raise
+
+        # # Write and display output
+        # output.write(stdout_data)
+        # print(stdout_data)
+
+        process = subprocess.Popen(
+            command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            universal_newlines=True,
+        )
+        
+        # Read and print output line-by-line
+        while True:
+            line = process.stdout.readline()
+            if not line and process.poll() is not None:
+                break
+            if line:
+                print(line, end='')        # Print to terminal in real time.
+                output.write(line)         # Write to the log file.
+                
+        retcode = process.wait()
+        if retcode != 0:
+            raise subprocess.CalledProcessError(retcode, " ".join(command))
+        
+        if process.returncode != 0:
+            raise subprocess.CalledProcessError(process.returncode, " ".join(command))
+        
+        eachJob["status"] = True
+
+    eachJob["endtime"] = time.time()
+    elapsed = eachJob["endtime"] - eachJob["starttime"]
+    logger.info("Job [%s] Finished, Time Taken: %.2f seconds", job_name, elapsed)
+    eachJob["finished"] = True
+
+
+# def run_actions(job_list):
+#     """If only one job exists, run it directly; else use multi-threading."""
+#     if len(job_list) == 1:
+#         run_single_script(job_list[0])
+#     else:
+#         # Fallback to threaded execution if more than one job is present.
+#         thread_sema = threading.Semaphore(args.maxthreads)
+#         thread_list = []
+#         for eachjob in job_list:
+#             t = threading.Thread(
+#                 target=run_single_script,
+#                 name=eachjob["name"],
+#                 args=(thread_sema, eachjob, job_list)  # This call now expects three arguments.
+#             )
+#             t.start()
+#             thread_list.append(t)
+#         for eachthread in thread_list:
+#             eachthread.join()
+
 
 
 def run_actions(job_list):
