@@ -58,7 +58,10 @@ help:
 checkout: 
 # Update all the submodules
 	git submodule init
-	git submodule update --init --recursive
+	git submodule update --init --recursive -- ":!openfpga-test-runs"
+	cd vtr-verilog-to-routing && git checkout dev_layer0
+# cd vtr-verilog-to-routing && git checkout openfpga && git checkout 7902d64af88e4d7f18b8193bbcc425d13d3fc3d7
+	
 
 prebuild:
 # Run cmake to generate Makefile under the build directory, before compilation

@@ -316,6 +316,8 @@ def generate_each_task_actions(taskname):
             "verific_include_dir",
             "verific_library_dir",
             "verific_search_lib",
+            "router_blackbox_verilog",
+            "noc_traffic_flows",
         ]
 
         yosys_params_common = {}
