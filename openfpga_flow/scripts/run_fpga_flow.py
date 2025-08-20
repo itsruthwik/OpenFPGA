@@ -889,10 +889,16 @@ def run_openfpga_shell():
     path_variables["ACTIVITY_FILE"] = args.top_module + "_ace_out.act"
     path_variables["REFERENCE_VERILOG_TESTBENCH"] = args.top_module + "_output_verilog.v"
 
+
+
+
     for indx in range(0, len(OpenFPGAArgs), 2):
         tmpVar = OpenFPGAArgs[indx][2:].upper()
         path_variables[tmpVar] = OpenFPGAArgs[indx + 1]
 
+    path_variable_log = "/mnt/vault1/rsunketa/OpenFPGA/openfpga_noc/pbf_scripts/test/my-log.txt"
+    with open(path_variable_log, "w") as log_file:
+        log_file.write("Path variables: %s\n" % str(path_variables))
     with open(args.top_module + "_run.openfpga", "w", encoding="utf-8") as archfile:
         archfile.write(tmpl.safe_substitute(path_variables))
     command = [cad_tools["openfpga_shell_path"], "-batch", "-f", args.top_module + "_run.openfpga"]
@@ -1061,4 +1067,6 @@ if __name__ == "__main__":
     ExecTime["Start"] = time.time()
     # args = parser.parse_args()
     args, OpenFPGAArgs = parser.parse_known_args()
+    print("Command line arguments: ", args)
+    print("OpenFPGA specific arguments: ", OpenFPGAArgs)
     main()

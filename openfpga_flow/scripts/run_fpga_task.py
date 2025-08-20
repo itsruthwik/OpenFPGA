@@ -114,6 +114,7 @@ def main():
     for eachtask in args.tasks:
         logger.info("Currently running task %s" % eachtask)
         eachtask = eachtask.replace("\\", "/").split("/")
+        print(f"Task name: {eachtask}")
         job_run_list, GeneralSection = generate_each_task_actions(eachtask)
         if args.remove_run_dir:
             continue
@@ -414,6 +415,7 @@ def generate_each_task_actions(taskname):
                     param=param,
                     task_conf=task_conf,
                 )
+                command += ["--task_dir", curr_task_dir]
                 command += ["--flow_config", curr_task_conf_file]
                 command += ["--default_tool_path", args.default_tool_path]
                 flow_run_cmd_list.append(
@@ -427,7 +429,6 @@ def generate_each_task_actions(taskname):
                         "status": False,
                     }
                 )
-
     logger.info(
         "Found %d Architectures %d Benchmarks & %d Script Parameters"
         % (len(archfile_list), len(benchmark_list), len(ScriptSections))

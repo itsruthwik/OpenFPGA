@@ -171,6 +171,9 @@ static void add_module_nets_tile_direct_connection(
                             sink_pin_grid_side, sink_pin_info);
   ModulePortId sink_port_id =
     module_manager.find_module_port(sink_grid_module, sink_port_name);
+  VTR_LOG("--- ### priting:    port:    '%s[%lu][%lu].%s'\n",
+                  sink_module_name.c_str(), des_clb_coord.x(),
+                  des_clb_coord.y(), sink_port_name.c_str());
   VTR_ASSERT(true == module_manager.valid_module_port_id(sink_grid_module,
                                                          sink_port_id));
   VTR_ASSERT(
