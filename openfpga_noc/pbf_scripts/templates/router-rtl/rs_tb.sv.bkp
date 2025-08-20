@@ -1,0 +1,88 @@
+module reset_synchronizer_tb;
+
+  // Parameters
+  parameter CLK_PERIOD = 10;  // 10ns clock period (100MHz)
+  parameter NUM_EXTEND_CYCLES = 4;
+  parameter NUM_OUTPUT_REGISTERS = 2;
+  
+  // Signals
+  logic reset_async;
+  logic sync_clk;
+  logic reset_sync;
+  
+  // Instantiate DUT
+  reset_synchronizer #(
+    .NUM_EXTEND_CYCLES(NUM_EXTEND_CYCLES),
+    .NUM_OUTPUT_REGISTERS(NUM_OUTPUT_REGISTERS)
+  ) dut (
+    .reset_async(reset_async),
+    .sync_clk(sync_clk),
+    .reset_sync(reset_sync)
+  );
+  
+  // Clock generation
+  initial begin
+    sync_clk = 0;
+    forever #(CLK_PERIOD/2) sync_clk = ~sync_clk;
+  end
+  
+  // Test sequence
+  initial begin
+    // Setup waveform dumping
+    $dumpfile("reset_synchronizer_tb.vcd");
+    $dumpvars(0, reset_synchronizer_tb);
+    
+    // Initial state
+    reset_async = 0;
+    
+    // Test case 1: Basic reset assertion
+    $display("Test case 1: Basic reset assertion at %0t", $time);
+    #(CLK_PERIOD*2);
+    reset_async = 1;
+    #(CLK_PERIOD*5);
+    reset_async = 0;
+    #(CLK_PERIOD*10);
+    
+    // Test case 2: Short reset pulse (less than 1 clock cycle)
+    $display("Test case 2: Short reset pulse at %0t", $time);
+    reset_async = 1;
+    #(CLK_PERIOD/3);
+    reset_async = 0;
+    #(CLK_PERIOD*10);
+    
+    // Test case 3: Multiple back-to-back reset pulses
+    $display("Test case 3: Multiple reset pulses at %0t", $time);
+    reset_async = 1;
+    #(CLK_PERIOD*1.5);
+    reset_async = 0;
+    #(CLK_PERIOD*0.7);
+    reset_async = 1;
+    #(CLK_PERIOD*0.8);
+    reset_async = 0;
+    #(CLK_PERIOD*0.9);
+    reset_async = 1;
+    #(CLK_PERIOD*1.2);
+    reset_async = 0;
+    
+    // Allow reset synchronizer to stabilize
+    #(CLK_PERIOD*(NUM_EXTEND_CYCLES + NUM_OUTPUT_REGISTERS + 5));
+    
+    // Test case 4: Verify reset extension and pipeline
+    $display("Test case 4: Reset extension verification at %0t", $time);
+    reset_async = 1;
+    #(CLK_PERIOD*1);
+    reset_async = 0;
+    
+    // Wait enough cycles to see complete reset synchronization process
+    #(CLK_PERIOD*(NUM_EXTEND_CYCLES + NUM_OUTPUT_REGISTERS + 10));
+    
+    $display("Simulation completed at %0t", $time);
+    $finish;
+  end
+  
+  // Monitor reset signals
+  always @(posedge sync_clk) begin
+    $display("T=%0t: reset_async=%b, reset_sync=%b", $time, reset_async, reset_sync);
+  end
+
+endmodule

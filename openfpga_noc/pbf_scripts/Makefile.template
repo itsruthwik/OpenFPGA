@@ -1,0 +1,29 @@
+
+###################################
+
+all: 
+	@if [ -e $(BLIF_FILE) ]; then \
+		echo "Synthesis already completed. BLIF file exists at: $(BLIF_FILE)"; \
+	else \
+		echo "Running synthesis..."; \
+		$(OPENFPGA_PATH)/build/yosys/bin/yosys -s ./yosys_scripts/yosys.ys | tee ./yosys_output.log; \
+		echo "Synthesis completed."; \
+	fi
+	@make run_vpr
+
+synth: 
+	@echo "Running synthesis..."
+	$(OPENFPGA_PATH)/build/yosys/bin/yosys -s ./yosys_scripts/yosys.ys | tee ./yosys_output.log
+	@echo "Synthesis completed."
+
+run_vpr: vpr parse_vpr
+
+vpr:
+	@echo "Running VPR..."
+	python3 $(PBF_SCRIPTS)/run_n_vpr_tasks.py -t ${VPR_RUN_DIR} -a ${VPR_ARCH} -b ${BLIF_FILE} -c ${PLACE_CONSTRAINTS} -n ${NUM_VPR_RUNS} 
+	@echo "VPR completed."
+
+parse_vpr:
+	@echo "Parsing VPR output..."
+	python3 $(PBF_SCRIPTS)/parse_vpr_logs.py -l ${DIR_LOG_FILE} 
+	@echo "Parsing completed."

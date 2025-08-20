@@ -1,0 +1,58 @@
+# openfpga script for the NoC biitstream generation flow
+
+vpr ${VPR_ARCH_FILE} ${VPR_TESTBENCH_BLIF} \
+    --device ${OPENFPGA_VPR_DEVICE_LAYOUT} \
+    --constant_net_method route  --echo_file on  --route_chan_width 300 \
+    --sdc_file /mnt/vault1/mfaroo19/OpenFPGA/openfpga-test-runs/001-shashank-router-tasks/scripts/clk_file.sdc \
+    --noc on --noc_flows_file /mnt/vault1/rsunketa/OpenFPGA/openfpga-test-runs/001-shashank-router-tasks/benchmarks/koios-synthetic/koios_synthetic_traffic.flows \
+    --read_rr_graph ${PATH:TASK_DIR}/../fabric/ds_vpr/rr_graph.bin --read_router_lookahead ${PATH:TASK_DIR}/../fabric/ds_vpr/router_lookahead.bin --read_placement_delay_lookup ${PATH:TASK_DIR}/../fabric/ds_vpr/placement_delay_lookup.bin 
+
+
+ext_exec --command "python3 /mnt/vault1/rsunketa/OpenFPGA/openfpga-test-runs/scripts/noc_bitstream_generator.py \
+    --vpr_arch ${VPR_ARCH_FILE} \
+    --vpr_tile router_wrap_tile \
+    --bench_top ${TOP_MODULE} \
+    --address_port router_address \
+    --run_dir ./ "
+
+# Read OpenFPGA architecture definition
+read_openfpga_arch -f ${OPENFPGA_ARCH_FILE}
+
+# Read OpenFPGA simulation settings
+read_openfpga_simulation_setting -f ${OPENFPGA_SIM_SETTING_FILE}
+
+# Annotate the OpenFPGA architecture to VPR data base
+# to debug use --verbose options
+link_openfpga_arch --sort_gsb_chan_node_in_edges # --verbose
+
+# Check and correct any naming conflicts in the BLIF netlist
+check_netlist_naming_conflict --fix --report ./netlist_renaming.xml
+
+# Apply fix-up to Look-Up Table truth tables based on packing results
+lut_truth_table_fixup
+
+# Build the module graph
+#  - Enabled compression on routing architecture modules
+#  - Enable pin duplication on grid modules
+build_fabric --compress_routing  # --verbose
+
+# Repack the netlist to physical pbs
+# This must be done before bitstream generator and testbench generation
+# Strongly recommend it is done after all the fix-up have been applied
+repack #--verbose
+
+# Build the bitstream
+#  - Output the fabric-independent bitstream to a file
+build_architecture_bitstream --verbose --write_file fabric_independent_bitstream.xml
+
+# Build fabric-dependent bitstream
+build_fabric_bitstream --verbose 
+
+# Write fabric-dependent bitstream
+write_fabric_bitstream --file fabric_bitstream.bit --format plain_text
+
+# Finish and exit OpenFPGA
+exit
+
+# Note :
+# To run verification at the end of the flow maintain source in ./SRC directory
