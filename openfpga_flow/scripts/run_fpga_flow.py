@@ -896,9 +896,6 @@ def run_openfpga_shell():
         tmpVar = OpenFPGAArgs[indx][2:].upper()
         path_variables[tmpVar] = OpenFPGAArgs[indx + 1]
 
-    path_variable_log = "/mnt/vault1/rsunketa/OpenFPGA/openfpga_noc/pbf_scripts/test/my-log.txt"
-    with open(path_variable_log, "w") as log_file:
-        log_file.write("Path variables: %s\n" % str(path_variables))
     with open(args.top_module + "_run.openfpga", "w", encoding="utf-8") as archfile:
         archfile.write(tmpl.safe_substitute(path_variables))
     command = [cad_tools["openfpga_shell_path"], "-batch", "-f", args.top_module + "_run.openfpga"]
