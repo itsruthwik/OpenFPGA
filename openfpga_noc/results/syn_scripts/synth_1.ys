@@ -1,0 +1,151 @@
+plugin -i parmys
+
+read_verilog -nomem2reg +/parmys/vtr_primitives.v
+setattr -mod -set keep_hierarchy 1 single_port_ram
+setattr -mod -set keep_hierarchy 1 dual_port_ram
+
+parmys_arch -a /mnt/vault1/rsunketa/OpenFPGA/openfpga_noc/results/hard_noc_results/pe_2_noc/mesh_4x4_complexDSP_mem32k_hbm_eth_vpr.xml
+
+
+read_verilog -sv -nolatches bench.v
+
+
+# Check that there are no combinational loops
+scc -select
+select -assert-none %
+select -clear
+
+hierarchy -check -auto-top -purge_lib
+
+opt_expr
+opt_clean
+check
+opt -nodffe -nosdff
+proc -norom
+fsm
+opt
+wreduce
+peepopt
+opt_clean
+share
+
+opt -full
+memory -nomap
+flatten
+
+opt -full
+
+techmap -map +/parmys/adff2dff.v
+techmap -map +/parmys/adffe2dff.v
+techmap -map +/parmys/aldff2dff.v
+techmap -map +/parmys/aldffe2dff.v
+
+opt -full
+
+parmys -a /mnt/vault1/rsunketa/OpenFPGA/openfpga_noc/results/hard_noc_results/pe_2_noc/mesh_4x4_complexDSP_mem32k_hbm_eth_vpr.xml -nopass -c /mnt/vault1/rsunketa/OpenFPGA/openfpga_noc/results/hard_noc_results/pe_2_noc/odin_config.xml YYY
+
+# opt -full
+
+# techmap 
+
+opt -fast 
+
+stat
+
+hierarchy -check -auto-top -purge_lib
+
+# write_blif -true + vcc -false + gnd -undef + unconn -blackbox bench.one.blif
+
+
+
+
+# # Yosys synthesis script for ${TOP_MODULE}
+# plugin -i  /mnt/vault1/rsunketa/vtr-verilog-to-routing/build/parmys/parmys.so
+# read_verilog -nomem2reg /mnt/vault1/rsunketa/OpenFPGA/vtr-verilog-to-routing/build/share/yosys/parmys/vtr_primitives.v
+# setattr -mod -set keep_hierarchy 1 single_port_ram
+# setattr -mod -set keep_hierarchy 1 dual_port_ram
+
+# parmys_arch -a /mnt/vault1/rsunketa/OpenFPGA/openfpga_noc/results/arch/mesh_4x4_complexDSP_mem32k_hbm_eth_vpr.xml
+
+# #########################
+# # Parse input files
+# #########################
+# # Read verilog files
+# # read_verilog -sv -nolatches ${VERILOG_FILES}
+# read_verilog -sv -nolatches bench.v
+
+# #########################
+# # Prepare for synthesis
+# #########################
+# # Identify top module from hierarchy
+# # hierarchy -check -top pe_15_noc
+# hierarchy -check -auto-top -purge_lib
+
+# # - Convert process blocks to AST
+# proc
+# # techmap -map +/adff2dff.v
+# # Flatten all the gates/primitives
+# flatten
+# # Identify tri-state buffers from 'z' signal in AST
+# # with follow-up optimizations to clean up AST
+# tribuf -logic
+# opt_expr
+# opt_clean
+# # demote inout ports to input or output port
+# # with follow-up optimizations to clean up AST
+# deminout
+# opt -nodffe -nosdff
+
+# opt_expr
+# opt_clean
+# check
+# opt -nodffe -nosdff
+# wreduce -keepdc
+# peepopt
+# pmuxtree
+# opt_clean
+
+
+# #########################
+# # Run coarse synthesis
+# #########################
+# # Run a tech map with default library
+# techmap
+# alumacc
+# share
+# opt -nodffe -nosdff
+# fsm
+# # Run a quick follow-up optimization to sweep out unused nets/signals
+# opt -fast -nodffe -nosdff
+# # Optimize any memory cells by merging share-able ports and collecting all the ports belonging to memorcy cells  
+# memory -nomap
+# opt_clean
+
+
+# techmap -map +/parmys/adff2dff.v
+# techmap -map +/parmys/adffe2dff.v
+# techmap -map +/parmys/aldff2dff.v
+# techmap -map +/parmys/aldffe2dff.v
+
+# opt -full
+
+
+# # # parmys -a /mnt/vault1/rsunketa/OpenFPGA/openfpga_noc/results/soft_noc_hbm_eth_results/pe_2_switch_hbm_eth/baseline_complexDSP_mem32k_hbm_eth_vpr.xml -c /mnt/vault1/rsunketa/OpenFPGA/openfpga_noc/results/soft_noc_hbm_eth_results/pe_2_switch_hbm_eth/odin_config.xml YYY
+# parmys -a /mnt/vault1/rsunketa/OpenFPGA/openfpga_noc/results/hard_noc_results/pe_2_noc/mesh_4x4_complexDSP_mem32k_hbm_eth_vpr.xml -nopass -c /mnt/vault1/rsunketa/OpenFPGA/openfpga_noc/results/hard_noc_results/pe_2_noc/odin_config.xml YYY
+
+# opt -full
+
+# # #########################
+# # # Check and show statisitics
+# # #########################
+# hierarchy -check
+# stat
+
+# # #########################
+# # # Output netlists
+# # #########################
+# # opt_clean -purge
+write_blif pe_2_noc.p.blif
+write_blif -true + vcc -false + gnd -undef + unconn -blackbox bench.one.blif
+write_verilog bench.one.v
+write_verilog -true + vcc -false + gnd -undef + unconn -blackbox bench.one.p.v
