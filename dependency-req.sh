@@ -67,6 +67,7 @@ apt-get install libeigen3-dev
 #for VPR graphics
 apt-get install libgtk-3-dev libx11-dev 
 
+apt-get install tcl-dev tk-dev
 #Dependencies required to run regression tests
 # Update as required by some packages
 apt-get update
