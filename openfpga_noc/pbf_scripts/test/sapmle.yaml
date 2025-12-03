@@ -15,7 +15,7 @@ fabric_gen_config:
     connections: [[2, 3], [1, 4], [1, 4], [2, 3]]
     locations: [(10,10), (20,20), (30,30), (40,40)]
     # Link can only be hard for now. Link is a connection between routers, can be hard or soft
-    link: soft
+    link: hard
     # clock can be single or dual. Single clock means both FPGA and NoC use same clock, dual clock means they use different clocks
     clock: dual
 
@@ -35,8 +35,8 @@ fabric_gen_config:
 
 bitstream_gen_config:
   # rtl design for bitstream generation 
-  design: /mnt/vault1/rsunketa/OpenFPGA/openfpga_noc/pbf_scripts/test/adder_4.v
-  top: adder_4
+  design: ./fabric/noc_bench.v
+  top: noc_bench
   # optional traffic flows file for NoC placement optimization 
   traffic_model: traffic.flows
 

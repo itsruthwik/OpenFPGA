@@ -14,7 +14,7 @@ import os
 
 
 
-def gen_task_config(config_file, OPENFPGA_PATH, shell_script, openfpga_arch, vpr_arch, bench, bench_top, router_blackbox):
+def gen_task_config(config_file, OPENFPGA_PATH, shell_script, openfpga_arch, vpr_arch, bench, bench_top, traffic_flows, router_blackbox):
     with open(config_file, 'w') as f:
         f.write("# Fabric generation configuration file\n")
         f.write("# = = = = = = = = = = = = = = = = = = =\n")
@@ -57,6 +57,8 @@ def gen_task_config(config_file, OPENFPGA_PATH, shell_script, openfpga_arch, vpr
         # else if task is "bitstream_gen":
         #     f.write(f"bench0_top = {bitstream_gen_bench_top}\n")
         f.write(f"bench0_top = {bench_top}\n")
+        if traffic_flows:
+            f.write(f"bench0_noc_flows = {traffic_flows}\n")
         f.write(f"bench0_yosys = {OPENFPGA_PATH}/openfpga-test-runs/001-shashank-router-tasks/scripts/complete_ys_tmpl.ys\n")
         f.write(f"bench_read_verilog_options_common = -nolatches\n")
         f.write(f"bench_router_blackbox_verilog_common={router_blackbox}\n")

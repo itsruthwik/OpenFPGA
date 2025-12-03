@@ -1,0 +1,3 @@
+<traffic_flows>
+	<single_flow src=".*pe1.*" dst=".*pe2.*" bandwidth="4e5" latency_cons="3e-9" />
+</traffic_flows>

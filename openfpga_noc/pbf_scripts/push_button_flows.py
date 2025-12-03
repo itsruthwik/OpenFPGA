@@ -1,4 +1,5 @@
 import os
+import shutil
 import yaml
 import argparse
 from types import SimpleNamespace
@@ -114,9 +115,15 @@ def create_fabric_gen_dir(task_dir, yaml_config):
     fabric_gen_bench = os.path.join(fabric_gen_dir, "noc_bench.v")
 
     router_blackbox = os.path.join(task_dir, "collateral/router_models/router_wrap_blackbox.sv")
+
+    traffic_flows_source = os.path.join(os.getenv('OPENFPGA_PATH'), "openfpga_noc/pbf_scripts/templates/traffic.flows")
+    # coopy to current dir
+    traffic_flows = os.path.join(fabric_gen_dir, "traffic.flows")
+    shutil.copy(traffic_flows_source, traffic_flows)
+
 # def gen_noc_bench(template, bench, dataw=128, destw=4):
     gen_noc_bench(fabric_gen_bench_template, fabric_gen_bench, yaml_config["fabric_gen_config"]["router"]["interface_width"], yaml_config["fabric_gen_config"]["NoC"]["num_routers"].bit_length())
-    gen_task_config(fabric_gen_config_file, os.getenv("OPENFPGA_PATH"), fabric_gen_shell_script, openfpga_arch_file, vpr_arch_file, fabric_gen_bench, "noc_bench_top", router_blackbox)
+    gen_task_config(fabric_gen_config_file, os.getenv("OPENFPGA_PATH"), fabric_gen_shell_script, openfpga_arch_file, vpr_arch_file, fabric_gen_bench, "noc_bench_top", traffic_flows, router_blackbox)
 
     print(f"Fabric generation config file created at: {fabric_gen_config_file}")
 
@@ -125,10 +132,22 @@ def create_bitstream_gen_dir(task_dir, yaml_config):
     bitstream_gen_dir = os.path.join(task_dir, "bitstream")
     vpr_arch_file = os.path.join(task_dir, "collateral/arch/vpr_arch.xml")
     openfpga_arch_file = os.path.join(task_dir, "collateral/arch/openfpga_arch.xml")
-    bitstream_gen_shell_script = os.path.join(os.getenv('OPENFPGA_PATH'), "openfpga_noc/pbf_scripts/templates/bitstream_gen_shell_script.openfpga")
 
     bench = yaml_config["bitstream_gen_config"]["design"]
     bench_top = yaml_config["bitstream_gen_config"]["top"]
+    traffic_flows = yaml_config["bitstream_gen_config"]["traffic_model"]
+
+    # if bench is not valid file
+    if not os.path.isfile(bench):
+        print(f"Bench file {bench} not found in the specified path. Using default noc_bench.v")
+        bench = os.path.join(task_dir, "fabric", "noc_bench.v")
+        bench_top = "noc_bench_top"
+        traffic_flows = os.path.join(task_dir, "fabric", "traffic.flows")
+
+
+    bitstream_gen_shell_script = os.path.join(os.getenv('OPENFPGA_PATH'), "openfpga_noc/pbf_scripts/templates/bitstream_gen_shell_script.openfpga")
+
+
 
     if not os.path.exists(bitstream_gen_dir):
         os.makedirs(bitstream_gen_dir)
@@ -138,7 +157,7 @@ def create_bitstream_gen_dir(task_dir, yaml_config):
 
     router_blackbox = os.path.join(task_dir, "collateral/router_models/router_wrap_blackbox.sv")
     # gen_bitstream_task_config(bitstream_gen_config_file, yaml_config["bitstream_gen_config"])
-    gen_task_config(bitstream_gen_config_file, os.getenv("OPENFPGA_PATH"), bitstream_gen_shell_script, openfpga_arch_file, vpr_arch_file, bench, bench_top, router_blackbox)
+    gen_task_config(bitstream_gen_config_file, os.getenv("OPENFPGA_PATH"), bitstream_gen_shell_script, openfpga_arch_file, vpr_arch_file, bench, bench_top, traffic_flows, router_blackbox)
 
     print(f"Bitstream generation config file created at: {bitstream_gen_config_file}")
 

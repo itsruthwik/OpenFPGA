@@ -3,6 +3,7 @@
 vpr ${VPR_ARCH_FILE} ${VPR_TESTBENCH_BLIF} \
     --device ${OPENFPGA_VPR_DEVICE_LAYOUT} \
     --echo_file on  --route_chan_width 300 --timing_report_detail aggregated \
+    --noc on --noc_flows_file ${NOC_TRAFFIC_FLOWS} \
     --sdc_file /mnt/vault1/mfaroo19/OpenFPGA/openfpga-test-runs/001-shashank-router-tasks/scripts/clk_file.sdc 
     
 #--read_vpr_constraints /mnt/vault1/rsunketa/OpenFPGA/openfpga_noc/pbf_scripts/test/constraints.xml
@@ -10,7 +11,7 @@ vpr ${VPR_ARCH_FILE} ${VPR_TESTBENCH_BLIF} \
 #    --write_rr_graph ${TASK_DIR}/../collateral/vpr_collateral/rr_graph.bin --write_router_lookahead ${TASK_DIR}/../collateral/vpr_collateral/router_lookahead.bin --write_placement_delay_lookup ${TASK_DIR}/../collateral/vpr_collateral/placement_delay_lookup.bin 
 
 # /mnt/vault1/rsunketa/OpenFPGA/openfpga_noc/pbf_scripts/tt/fabric
-ext_exec --command "python3 /mnt/vault1/rsunketa/OpenFPGA/openfpga-test-runs/scripts/noc_bitstream_generator.py \
+ext_exec --command "python3 /mnt/vault1/rsunketa/OpenFPGA/openfpga_noc/noc_scripts/noc_bitstream_generator.py \
     --vpr_arch ${VPR_ARCH_FILE} \
     --vpr_tile router_wrap_tile \
     --bench_top ${TOP_MODULE} \
@@ -25,7 +26,7 @@ read_openfpga_simulation_setting -f ${OPENFPGA_SIM_SETTING_FILE}
 
 # Annotate the OpenFPGA architecture to VPR data base
 # to debug use --verbose options
-link_openfpga_arch --sort_gsb_chan_node_in_edges # --verbose
+link_openfpga_arch --sort_gsb_chan_node_in_edges --verbose
 
 # Check and correct any naming conflicts in the BLIF netlist
 check_netlist_naming_conflict --fix --report ./netlist_renaming.xml
@@ -49,17 +50,17 @@ repack #--verbose
 
 # Build the bitstream
 #  - Output the fabric-independent bitstream to a file
-build_architecture_bitstream --verbose --write_file fabric_independent_bitstream.xml
+build_architecture_bitstream --write_file fabric_independent_bitstream.xml # --verbose
 
 # Build fabric-dependent bitstream
-build_fabric_bitstream --verbose #
+build_fabric_bitstream # --verbose 
 
 # Write fabric-dependent bitstream
 write_fabric_bitstream --file fabric_bitstream.bit --format plain_text
 
 # Write the Verilog netlist for FPGA fabric
 #  - Enable the use of explicit port mapping in Verilog netlist
-write_fabric_verilog --file ${TASK_DIR}/../collateral/fabric_collateral/ --explicit_port_mapping --include_timing --print_user_defined_template --verbose --constant_undriven_inputs bus0
+write_fabric_verilog --file ${TASK_DIR}/../collateral/fabric_collateral/ --explicit_port_mapping --include_timing --print_user_defined_template --constant_undriven_inputs bus0 #--verbose 
 
 # Write the Verilog testbench for FPGA fabric
 #  - We suggest the use of same output directory as fabric Verilog netlists
@@ -84,7 +85,7 @@ write_pnr_sdc --file ${TASK_DIR}/../collateral/fabric_collateral/SDC
 write_sdc_disable_timing_configure_ports --file ${TASK_DIR}/../collateral/fabric_collateral/SDC/disable_configure_ports.sdc
 #
 ## Write the SDC to run timing analysis for a mapped FPGA fabric
-write_analysis_sdc --file ${TASK_DIR}/../collateral/fabric_collateral/SDC_analysis
+# write_analysis_sdc --file ${TASK_DIR}/../collateral/fabric_collateral/SDC_analysis
 
 # Finish and exit OpenFPGA
 exit
