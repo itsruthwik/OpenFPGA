@@ -1,6 +1,6 @@
 
 
-// `include "/mnt/vault1/rsunketa/OpenFPGA/openfpga_noc/results/benchmarks/koios_axi_wrap.v"
+`include "/mnt/vault1/rsunketa/OpenFPGA/openfpga-test-runs/000-push-button-flows/bench/koios_axi_wrap.v"
 
 `include "/mnt/vault1/rsunketa/OpenFPGA/openfpga_noc/results/benchmarks/axi_switch/axi_switch_1_4.v"
 
@@ -23,18 +23,16 @@ module pe_2_switch (
     output [3:0] outp_dest,
     output [1:0] outp_id,
 
-// PE 0 signals
     output [127:0] pe0_out_data,
-    output                     pe0_out_valid,
+    output         pe0_out_valid,
     output [3:0] pe0_out_dest,
     output [1:0]   pe0_out_id,
-    output                     pe0_in_ready,
-// PE 1 signals
+
     output [127:0] pe1_out_data,
-    output                     pe1_out_valid,
+    output         pe1_out_valid,
     output [3:0] pe1_out_dest,
     output [1:0]   pe1_out_id,
-    output                     pe1_in_ready,
+
 
     // test for hbm_inst
     input  [1:0] in_tlast,
@@ -49,26 +47,27 @@ module pe_2_switch (
 // PE 0 signals
     // wire [127:0] pe0_out_data;
     // wire                     pe0_out_valid;
-    wire                     pe0_out_ready;
     // wire [3:0] pe0_out_dest;
     // wire [1:0]   pe0_out_id;
+    wire                     pe0_out_ready;
     
     wire [127:0] pe0_in_data;
     wire                     pe0_in_valid;
-    // wire                     pe0_in_ready;
+    wire                     pe0_in_ready;
     wire [3:0] pe0_in_dest;
     wire [1:0]   pe0_in_id;
 
 // PE 1 signals
     // wire [127:0] pe1_out_data;
     // wire                     pe1_out_valid;
-    wire                     pe1_out_ready;
     // wire [3:0] pe1_out_dest;
     // wire [1:0]   pe1_out_id;
+    wire                     pe1_out_ready;
+
     
     wire [127:0] pe1_in_data;
     wire                     pe1_in_valid;
-    // wire                     pe1_in_ready;
+    wire                     pe1_in_ready;
     wire [3:0] pe1_in_dest;
     wire [1:0]   pe1_in_id;
 
@@ -78,23 +77,20 @@ module pe_2_switch (
         .clk(clk),
         .reset(reset),
         
-        .axis_in_data(pe0_in_data),
-        .axis_in_valid(pe0_in_valid),
-        .axis_in_ready(pe0_in_ready),
-        // .inp_dest(pe0_in_dest),
-        .axis_in_id(pe0_in_id),
-        // .axis_in_last(pe0_in_last),
-
-        .axis_out_data(pe0_out_data),
-        .axis_out_valid(pe0_out_valid),
-        .axis_out_ready(pe0_out_ready),
-        // .axis_out_dest(pe0_out_dest),
-        .axis_out_id(pe0_out_id),
-        .axis_out_id(pe0_out_id),
-        // .axis_out_last(pe0_out_last)
-
-        // .test_input(test_input[3:0]),
-        // .test_output(test_output[3:0])
+        .inp_data(pe0_in_data),
+        .inp_valid(pe0_in_valid),
+        .inp_ready(pe0_in_ready),
+        .inp_dest(pe0_in_dest),
+        .inp_id(pe0_in_id),
+        
+        .outp_data(pe0_out_data),
+        .outp_valid(pe0_out_valid),
+        .outp_ready(pe0_out_ready),
+        .outp_dest(pe0_out_dest),
+        .outp_id(pe0_out_id),
+        
+        .test_input(test_input[3:0]),
+        .test_output(test_output[3:0])
     );
 
 // PE 1 instantiation
@@ -102,48 +98,22 @@ module pe_2_switch (
         .clk(clk),
         .reset(reset),
         
-        .axis_in_data(pe1_in_data),
-        .axis_in_valid(pe1_in_valid),
-        .axis_in_ready(pe1_in_ready),
-        // .inp_dest(pe1_in_dest),
-        .axis_in_id(pe1_in_id),
-        // .axis_in_last(pe1_in_last),
-
-        .axis_out_data(pe1_out_data),
-        .axis_out_valid(pe1_out_valid),
-        .axis_out_ready(pe1_out_ready),
-        // .axis_out_dest(pe1_out_dest),
-        .axis_out_id(pe1_out_id),
-        .axis_out_id(pe1_out_id),
-        // .axis_out_last(pe1_out_last)
-
-        // .test_input(test_input[7:4]),
-        // .test_output(test_output[7:4])
+        .inp_data(pe1_in_data),
+        .inp_valid(pe1_in_valid),
+        .inp_ready(pe1_in_ready),
+        .inp_dest(pe1_in_dest),
+        .inp_id(pe1_in_id),
+        
+        .outp_data(pe1_out_data),
+        .outp_valid(pe1_out_valid),
+        .outp_ready(pe1_out_ready),
+        .outp_dest(pe1_out_dest),
+        .outp_id(pe1_out_id),
+        
+        .test_input(test_input[7:4]),
+        .test_output(test_output[7:4])
     );
 
-
-// // PE 0 instantiation
-//     (* keep = "true" *) koios_axi_wrap pe_inst_0 (
-//         .clk(clk),
-//         .reset(reset),
-        
-//         .axis_in_data(pe0_in_data),
-//         .axis_in_valid(pe0_in_valid),
-//         .axis_in_ready(pe0_in_ready),
-//         // .axis_in_dest(pe0_in_dest),
-//         .axis_in_id(pe0_in_id),
-//         .axis_in_last(pe0_in_last),
-        
-//         .axis_out_data(pe0_out_data),
-//         .axis_out_valid(pe0_out_valid),
-//         .axis_out_ready(pe0_out_ready),
-//         // .axis_out_dest(pe0_out_dest),
-//         .axis_out_id(pe0_out_id),
-//         .axis_out_last(pe0_out_last)
-
-//         // .test_input(test_input[3:0]),
-//         // .test_output(test_output[3:0])
-//     );
 
 
     wire [127:0] switch_in_0_tdata;

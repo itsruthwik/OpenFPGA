@@ -2,8 +2,8 @@
 fabric_gen_config:
   FPGA:
   # baseline  VPR and OpenFPGA architecture files
-    vpr: vpr_arch.xml
-    openfpga: openfpga_arch.xml
+    vpr: 
+    openfpga:
     grid_size: [50, 50]
 
   NoC:
@@ -28,14 +28,15 @@ fabric_gen_config:
     # router_interface: credit_based
     # interface_width (bits) is the width of data port on the interface connected to injection port of router
     # interface_width can be more than flit_width. Serializer/deserializer will be used to convert flit_width data to interface_width data
-    interface_width: 32
+    interface_width: 128
     interface_buffer_depth: 4
 
 
 
 bitstream_gen_config:
   # rtl design for bitstream generation 
-  design: rtl.v
+  design: /mnt/vault1/rsunketa/OpenFPGA/openfpga_noc/pbf_scripts/test/adder_4.v
+  top: adder_4
   # optional traffic flows file for NoC placement optimization 
   traffic_model: traffic.flows
 

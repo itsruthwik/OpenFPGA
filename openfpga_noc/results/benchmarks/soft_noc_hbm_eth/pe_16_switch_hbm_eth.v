@@ -1,6 +1,6 @@
 
 
-// `include "/mnt/vault1/rsunketa/OpenFPGA/openfpga_noc/results/benchmarks/koios_axi_wrap.v"
+`include "/mnt/vault1/rsunketa/OpenFPGA/openfpga-test-runs/000-push-button-flows/bench/koios_axi_wrap.v"
 
 `include "/mnt/vault1/rsunketa/OpenFPGA/openfpga_noc/results/benchmarks/axi_switch/axi_switch_1_18.v"
 
@@ -344,23 +344,20 @@ module pe_16_switch (
         .clk(clk),
         .reset(reset),
         
-        .axis_in_data(pe0_in_data),
-        .axis_in_valid(pe0_in_valid),
-        .axis_in_ready(pe0_in_ready),
-        // .inp_dest(pe0_in_dest),
-        .axis_in_id(pe0_in_id),
-        // .axis_in_last(pe0_in_last),
-
-        .axis_out_data(pe0_out_data),
-        .axis_out_valid(pe0_out_valid),
-        .axis_out_ready(pe0_out_ready),
-        // .axis_out_dest(pe0_out_dest),
-        .axis_out_id(pe0_out_id),
-        .axis_out_id(pe0_out_id),
-        // .axis_out_last(pe0_out_last)
-
-        // .test_input(test_input[3:0]),
-        // .test_output(test_output[3:0])
+        .inp_data(pe0_in_data),
+        .inp_valid(pe0_in_valid),
+        .inp_ready(pe0_in_ready),
+        .inp_dest(pe0_in_dest),
+        .inp_id(pe0_in_id),
+        
+        .outp_data(pe0_out_data),
+        .outp_valid(pe0_out_valid),
+        .outp_ready(pe0_out_ready),
+        .outp_dest(pe0_out_dest),
+        .outp_id(pe0_out_id),
+        
+        .test_input(test_input[3:0]),
+        .test_output(test_output[3:0])
     );
 
 // PE 1 instantiation
@@ -368,23 +365,20 @@ module pe_16_switch (
         .clk(clk),
         .reset(reset),
         
-        .axis_in_data(pe1_in_data),
-        .axis_in_valid(pe1_in_valid),
-        .axis_in_ready(pe1_in_ready),
-        // .inp_dest(pe1_in_dest),
-        .axis_in_id(pe1_in_id),
-        // .axis_in_last(pe1_in_last),
-
-        .axis_out_data(pe1_out_data),
-        .axis_out_valid(pe1_out_valid),
-        .axis_out_ready(pe1_out_ready),
-        // .axis_out_dest(pe1_out_dest),
-        .axis_out_id(pe1_out_id),
-        .axis_out_id(pe1_out_id),
-        // .axis_out_last(pe1_out_last)
-
-        // .test_input(test_input[7:4]),
-        // .test_output(test_output[7:4])
+        .inp_data(pe1_in_data),
+        .inp_valid(pe1_in_valid),
+        .inp_ready(pe1_in_ready),
+        .inp_dest(pe1_in_dest),
+        .inp_id(pe1_in_id),
+        
+        .outp_data(pe1_out_data),
+        .outp_valid(pe1_out_valid),
+        .outp_ready(pe1_out_ready),
+        .outp_dest(pe1_out_dest),
+        .outp_id(pe1_out_id),
+        
+        .test_input(test_input[7:4]),
+        .test_output(test_output[7:4])
     );
 
 // PE 2 instantiation
@@ -392,23 +386,20 @@ module pe_16_switch (
         .clk(clk),
         .reset(reset),
         
-        .axis_in_data(pe2_in_data),
-        .axis_in_valid(pe2_in_valid),
-        .axis_in_ready(pe2_in_ready),
-        // .inp_dest(pe2_in_dest),
-        .axis_in_id(pe2_in_id),
-        // .axis_in_last(pe2_in_last),
-
-        .axis_out_data(pe2_out_data),
-        .axis_out_valid(pe2_out_valid),
-        .axis_out_ready(pe2_out_ready),
-        // .axis_out_dest(pe2_out_dest),
-        .axis_out_id(pe2_out_id),
-        .axis_out_id(pe2_out_id),
-        // .axis_out_last(pe2_out_last)
-
-        // .test_input(test_input[11:8]),
-        // .test_output(test_output[11:8])
+        .inp_data(pe2_in_data),
+        .inp_valid(pe2_in_valid),
+        .inp_ready(pe2_in_ready),
+        .inp_dest(pe2_in_dest),
+        .inp_id(pe2_in_id),
+        
+        .outp_data(pe2_out_data),
+        .outp_valid(pe2_out_valid),
+        .outp_ready(pe2_out_ready),
+        .outp_dest(pe2_out_dest),
+        .outp_id(pe2_out_id),
+        
+        .test_input(test_input[11:8]),
+        .test_output(test_output[11:8])
     );
 
 // PE 3 instantiation
@@ -416,23 +407,20 @@ module pe_16_switch (
         .clk(clk),
         .reset(reset),
         
-        .axis_in_data(pe3_in_data),
-        .axis_in_valid(pe3_in_valid),
-        .axis_in_ready(pe3_in_ready),
-        // .inp_dest(pe3_in_dest),
-        .axis_in_id(pe3_in_id),
-        // .axis_in_last(pe3_in_last),
-
-        .axis_out_data(pe3_out_data),
-        .axis_out_valid(pe3_out_valid),
-        .axis_out_ready(pe3_out_ready),
-        // .axis_out_dest(pe3_out_dest),
-        .axis_out_id(pe3_out_id),
-        .axis_out_id(pe3_out_id),
-        // .axis_out_last(pe3_out_last)
-
-        // .test_input(test_input[15:12]),
-        // .test_output(test_output[15:12])
+        .inp_data(pe3_in_data),
+        .inp_valid(pe3_in_valid),
+        .inp_ready(pe3_in_ready),
+        .inp_dest(pe3_in_dest),
+        .inp_id(pe3_in_id),
+        
+        .outp_data(pe3_out_data),
+        .outp_valid(pe3_out_valid),
+        .outp_ready(pe3_out_ready),
+        .outp_dest(pe3_out_dest),
+        .outp_id(pe3_out_id),
+        
+        .test_input(test_input[15:12]),
+        .test_output(test_output[15:12])
     );
 
 // PE 4 instantiation
@@ -440,23 +428,20 @@ module pe_16_switch (
         .clk(clk),
         .reset(reset),
         
-        .axis_in_data(pe4_in_data),
-        .axis_in_valid(pe4_in_valid),
-        .axis_in_ready(pe4_in_ready),
-        // .inp_dest(pe4_in_dest),
-        .axis_in_id(pe4_in_id),
-        // .axis_in_last(pe4_in_last),
-
-        .axis_out_data(pe4_out_data),
-        .axis_out_valid(pe4_out_valid),
-        .axis_out_ready(pe4_out_ready),
-        // .axis_out_dest(pe4_out_dest),
-        .axis_out_id(pe4_out_id),
-        .axis_out_id(pe4_out_id),
-        // .axis_out_last(pe4_out_last)
-
-        // .test_input(test_input[19:16]),
-        // .test_output(test_output[19:16])
+        .inp_data(pe4_in_data),
+        .inp_valid(pe4_in_valid),
+        .inp_ready(pe4_in_ready),
+        .inp_dest(pe4_in_dest),
+        .inp_id(pe4_in_id),
+        
+        .outp_data(pe4_out_data),
+        .outp_valid(pe4_out_valid),
+        .outp_ready(pe4_out_ready),
+        .outp_dest(pe4_out_dest),
+        .outp_id(pe4_out_id),
+        
+        .test_input(test_input[19:16]),
+        .test_output(test_output[19:16])
     );
 
 // PE 5 instantiation
@@ -464,23 +449,20 @@ module pe_16_switch (
         .clk(clk),
         .reset(reset),
         
-        .axis_in_data(pe5_in_data),
-        .axis_in_valid(pe5_in_valid),
-        .axis_in_ready(pe5_in_ready),
-        // .inp_dest(pe5_in_dest),
-        .axis_in_id(pe5_in_id),
-        // .axis_in_last(pe5_in_last),
-
-        .axis_out_data(pe5_out_data),
-        .axis_out_valid(pe5_out_valid),
-        .axis_out_ready(pe5_out_ready),
-        // .axis_out_dest(pe5_out_dest),
-        .axis_out_id(pe5_out_id),
-        .axis_out_id(pe5_out_id),
-        // .axis_out_last(pe5_out_last)
-
-        // .test_input(test_input[23:20]),
-        // .test_output(test_output[23:20])
+        .inp_data(pe5_in_data),
+        .inp_valid(pe5_in_valid),
+        .inp_ready(pe5_in_ready),
+        .inp_dest(pe5_in_dest),
+        .inp_id(pe5_in_id),
+        
+        .outp_data(pe5_out_data),
+        .outp_valid(pe5_out_valid),
+        .outp_ready(pe5_out_ready),
+        .outp_dest(pe5_out_dest),
+        .outp_id(pe5_out_id),
+        
+        .test_input(test_input[23:20]),
+        .test_output(test_output[23:20])
     );
 
 // PE 6 instantiation
@@ -488,23 +470,20 @@ module pe_16_switch (
         .clk(clk),
         .reset(reset),
         
-        .axis_in_data(pe6_in_data),
-        .axis_in_valid(pe6_in_valid),
-        .axis_in_ready(pe6_in_ready),
-        // .inp_dest(pe6_in_dest),
-        .axis_in_id(pe6_in_id),
-        // .axis_in_last(pe6_in_last),
-
-        .axis_out_data(pe6_out_data),
-        .axis_out_valid(pe6_out_valid),
-        .axis_out_ready(pe6_out_ready),
-        // .axis_out_dest(pe6_out_dest),
-        .axis_out_id(pe6_out_id),
-        .axis_out_id(pe6_out_id),
-        // .axis_out_last(pe6_out_last)
-
-        // .test_input(test_input[27:24]),
-        // .test_output(test_output[27:24])
+        .inp_data(pe6_in_data),
+        .inp_valid(pe6_in_valid),
+        .inp_ready(pe6_in_ready),
+        .inp_dest(pe6_in_dest),
+        .inp_id(pe6_in_id),
+        
+        .outp_data(pe6_out_data),
+        .outp_valid(pe6_out_valid),
+        .outp_ready(pe6_out_ready),
+        .outp_dest(pe6_out_dest),
+        .outp_id(pe6_out_id),
+        
+        .test_input(test_input[27:24]),
+        .test_output(test_output[27:24])
     );
 
 // PE 7 instantiation
@@ -512,23 +491,20 @@ module pe_16_switch (
         .clk(clk),
         .reset(reset),
         
-        .axis_in_data(pe7_in_data),
-        .axis_in_valid(pe7_in_valid),
-        .axis_in_ready(pe7_in_ready),
-        // .inp_dest(pe7_in_dest),
-        .axis_in_id(pe7_in_id),
-        // .axis_in_last(pe7_in_last),
-
-        .axis_out_data(pe7_out_data),
-        .axis_out_valid(pe7_out_valid),
-        .axis_out_ready(pe7_out_ready),
-        // .axis_out_dest(pe7_out_dest),
-        .axis_out_id(pe7_out_id),
-        .axis_out_id(pe7_out_id),
-        // .axis_out_last(pe7_out_last)
-
-        // .test_input(test_input[31:28]),
-        // .test_output(test_output[31:28])
+        .inp_data(pe7_in_data),
+        .inp_valid(pe7_in_valid),
+        .inp_ready(pe7_in_ready),
+        .inp_dest(pe7_in_dest),
+        .inp_id(pe7_in_id),
+        
+        .outp_data(pe7_out_data),
+        .outp_valid(pe7_out_valid),
+        .outp_ready(pe7_out_ready),
+        .outp_dest(pe7_out_dest),
+        .outp_id(pe7_out_id),
+        
+        .test_input(test_input[31:28]),
+        .test_output(test_output[31:28])
     );
 
 // PE 8 instantiation
@@ -536,23 +512,20 @@ module pe_16_switch (
         .clk(clk),
         .reset(reset),
         
-        .axis_in_data(pe8_in_data),
-        .axis_in_valid(pe8_in_valid),
-        .axis_in_ready(pe8_in_ready),
-        // .inp_dest(pe8_in_dest),
-        .axis_in_id(pe8_in_id),
-        // .axis_in_last(pe8_in_last),
-
-        .axis_out_data(pe8_out_data),
-        .axis_out_valid(pe8_out_valid),
-        .axis_out_ready(pe8_out_ready),
-        // .axis_out_dest(pe8_out_dest),
-        .axis_out_id(pe8_out_id),
-        .axis_out_id(pe8_out_id),
-        // .axis_out_last(pe8_out_last)
-
-        // .test_input(test_input[35:32]),
-        // .test_output(test_output[35:32])
+        .inp_data(pe8_in_data),
+        .inp_valid(pe8_in_valid),
+        .inp_ready(pe8_in_ready),
+        .inp_dest(pe8_in_dest),
+        .inp_id(pe8_in_id),
+        
+        .outp_data(pe8_out_data),
+        .outp_valid(pe8_out_valid),
+        .outp_ready(pe8_out_ready),
+        .outp_dest(pe8_out_dest),
+        .outp_id(pe8_out_id),
+        
+        .test_input(test_input[35:32]),
+        .test_output(test_output[35:32])
     );
 
 // PE 9 instantiation
@@ -560,23 +533,20 @@ module pe_16_switch (
         .clk(clk),
         .reset(reset),
         
-        .axis_in_data(pe9_in_data),
-        .axis_in_valid(pe9_in_valid),
-        .axis_in_ready(pe9_in_ready),
-        // .inp_dest(pe9_in_dest),
-        .axis_in_id(pe9_in_id),
-        // .axis_in_last(pe9_in_last),
-
-        .axis_out_data(pe9_out_data),
-        .axis_out_valid(pe9_out_valid),
-        .axis_out_ready(pe9_out_ready),
-        // .axis_out_dest(pe9_out_dest),
-        .axis_out_id(pe9_out_id),
-        .axis_out_id(pe9_out_id),
-        // .axis_out_last(pe9_out_last)
-
-        // .test_input(test_input[39:36]),
-        // .test_output(test_output[39:36])
+        .inp_data(pe9_in_data),
+        .inp_valid(pe9_in_valid),
+        .inp_ready(pe9_in_ready),
+        .inp_dest(pe9_in_dest),
+        .inp_id(pe9_in_id),
+        
+        .outp_data(pe9_out_data),
+        .outp_valid(pe9_out_valid),
+        .outp_ready(pe9_out_ready),
+        .outp_dest(pe9_out_dest),
+        .outp_id(pe9_out_id),
+        
+        .test_input(test_input[39:36]),
+        .test_output(test_output[39:36])
     );
 
 // PE 10 instantiation
@@ -584,23 +554,20 @@ module pe_16_switch (
         .clk(clk),
         .reset(reset),
         
-        .axis_in_data(pe10_in_data),
-        .axis_in_valid(pe10_in_valid),
-        .axis_in_ready(pe10_in_ready),
-        // .inp_dest(pe10_in_dest),
-        .axis_in_id(pe10_in_id),
-        // .axis_in_last(pe10_in_last),
-
-        .axis_out_data(pe10_out_data),
-        .axis_out_valid(pe10_out_valid),
-        .axis_out_ready(pe10_out_ready),
-        // .axis_out_dest(pe10_out_dest),
-        .axis_out_id(pe10_out_id),
-        .axis_out_id(pe10_out_id),
-        // .axis_out_last(pe10_out_last)
-
-        // .test_input(test_input[43:40]),
-        // .test_output(test_output[43:40])
+        .inp_data(pe10_in_data),
+        .inp_valid(pe10_in_valid),
+        .inp_ready(pe10_in_ready),
+        .inp_dest(pe10_in_dest),
+        .inp_id(pe10_in_id),
+        
+        .outp_data(pe10_out_data),
+        .outp_valid(pe10_out_valid),
+        .outp_ready(pe10_out_ready),
+        .outp_dest(pe10_out_dest),
+        .outp_id(pe10_out_id),
+        
+        .test_input(test_input[43:40]),
+        .test_output(test_output[43:40])
     );
 
 // PE 11 instantiation
@@ -608,23 +575,20 @@ module pe_16_switch (
         .clk(clk),
         .reset(reset),
         
-        .axis_in_data(pe11_in_data),
-        .axis_in_valid(pe11_in_valid),
-        .axis_in_ready(pe11_in_ready),
-        // .inp_dest(pe11_in_dest),
-        .axis_in_id(pe11_in_id),
-        // .axis_in_last(pe11_in_last),
-
-        .axis_out_data(pe11_out_data),
-        .axis_out_valid(pe11_out_valid),
-        .axis_out_ready(pe11_out_ready),
-        // .axis_out_dest(pe11_out_dest),
-        .axis_out_id(pe11_out_id),
-        .axis_out_id(pe11_out_id),
-        // .axis_out_last(pe11_out_last)
-
-        // .test_input(test_input[47:44]),
-        // .test_output(test_output[47:44])
+        .inp_data(pe11_in_data),
+        .inp_valid(pe11_in_valid),
+        .inp_ready(pe11_in_ready),
+        .inp_dest(pe11_in_dest),
+        .inp_id(pe11_in_id),
+        
+        .outp_data(pe11_out_data),
+        .outp_valid(pe11_out_valid),
+        .outp_ready(pe11_out_ready),
+        .outp_dest(pe11_out_dest),
+        .outp_id(pe11_out_id),
+        
+        .test_input(test_input[47:44]),
+        .test_output(test_output[47:44])
     );
 
 // PE 12 instantiation
@@ -632,23 +596,20 @@ module pe_16_switch (
         .clk(clk),
         .reset(reset),
         
-        .axis_in_data(pe12_in_data),
-        .axis_in_valid(pe12_in_valid),
-        .axis_in_ready(pe12_in_ready),
-        // .inp_dest(pe12_in_dest),
-        .axis_in_id(pe12_in_id),
-        // .axis_in_last(pe12_in_last),
-
-        .axis_out_data(pe12_out_data),
-        .axis_out_valid(pe12_out_valid),
-        .axis_out_ready(pe12_out_ready),
-        // .axis_out_dest(pe12_out_dest),
-        .axis_out_id(pe12_out_id),
-        .axis_out_id(pe12_out_id),
-        // .axis_out_last(pe12_out_last)
-
-        // .test_input(test_input[51:48]),
-        // .test_output(test_output[51:48])
+        .inp_data(pe12_in_data),
+        .inp_valid(pe12_in_valid),
+        .inp_ready(pe12_in_ready),
+        .inp_dest(pe12_in_dest),
+        .inp_id(pe12_in_id),
+        
+        .outp_data(pe12_out_data),
+        .outp_valid(pe12_out_valid),
+        .outp_ready(pe12_out_ready),
+        .outp_dest(pe12_out_dest),
+        .outp_id(pe12_out_id),
+        
+        .test_input(test_input[51:48]),
+        .test_output(test_output[51:48])
     );
 
 // PE 13 instantiation
@@ -656,23 +617,20 @@ module pe_16_switch (
         .clk(clk),
         .reset(reset),
         
-        .axis_in_data(pe13_in_data),
-        .axis_in_valid(pe13_in_valid),
-        .axis_in_ready(pe13_in_ready),
-        // .inp_dest(pe13_in_dest),
-        .axis_in_id(pe13_in_id),
-        // .axis_in_last(pe13_in_last),
-
-        .axis_out_data(pe13_out_data),
-        .axis_out_valid(pe13_out_valid),
-        .axis_out_ready(pe13_out_ready),
-        // .axis_out_dest(pe13_out_dest),
-        .axis_out_id(pe13_out_id),
-        .axis_out_id(pe13_out_id),
-        // .axis_out_last(pe13_out_last)
-
-        // .test_input(test_input[55:52]),
-        // .test_output(test_output[55:52])
+        .inp_data(pe13_in_data),
+        .inp_valid(pe13_in_valid),
+        .inp_ready(pe13_in_ready),
+        .inp_dest(pe13_in_dest),
+        .inp_id(pe13_in_id),
+        
+        .outp_data(pe13_out_data),
+        .outp_valid(pe13_out_valid),
+        .outp_ready(pe13_out_ready),
+        .outp_dest(pe13_out_dest),
+        .outp_id(pe13_out_id),
+        
+        .test_input(test_input[55:52]),
+        .test_output(test_output[55:52])
     );
 
 // PE 14 instantiation
@@ -680,23 +638,20 @@ module pe_16_switch (
         .clk(clk),
         .reset(reset),
         
-        .axis_in_data(pe14_in_data),
-        .axis_in_valid(pe14_in_valid),
-        .axis_in_ready(pe14_in_ready),
-        // .inp_dest(pe14_in_dest),
-        .axis_in_id(pe14_in_id),
-        // .axis_in_last(pe14_in_last),
-
-        .axis_out_data(pe14_out_data),
-        .axis_out_valid(pe14_out_valid),
-        .axis_out_ready(pe14_out_ready),
-        // .axis_out_dest(pe14_out_dest),
-        .axis_out_id(pe14_out_id),
-        .axis_out_id(pe14_out_id),
-        // .axis_out_last(pe14_out_last)
-
-        // .test_input(test_input[59:56]),
-        // .test_output(test_output[59:56])
+        .inp_data(pe14_in_data),
+        .inp_valid(pe14_in_valid),
+        .inp_ready(pe14_in_ready),
+        .inp_dest(pe14_in_dest),
+        .inp_id(pe14_in_id),
+        
+        .outp_data(pe14_out_data),
+        .outp_valid(pe14_out_valid),
+        .outp_ready(pe14_out_ready),
+        .outp_dest(pe14_out_dest),
+        .outp_id(pe14_out_id),
+        
+        .test_input(test_input[59:56]),
+        .test_output(test_output[59:56])
     );
 
 // PE 15 instantiation
@@ -704,48 +659,22 @@ module pe_16_switch (
         .clk(clk),
         .reset(reset),
         
-        .axis_in_data(pe15_in_data),
-        .axis_in_valid(pe15_in_valid),
-        .axis_in_ready(pe15_in_ready),
-        // .inp_dest(pe15_in_dest),
-        .axis_in_id(pe15_in_id),
-        // .axis_in_last(pe15_in_last),
-
-        .axis_out_data(pe15_out_data),
-        .axis_out_valid(pe15_out_valid),
-        .axis_out_ready(pe15_out_ready),
-        // .axis_out_dest(pe15_out_dest),
-        .axis_out_id(pe15_out_id),
-        .axis_out_id(pe15_out_id),
-        // .axis_out_last(pe15_out_last)
-
-        // .test_input(test_input[63:60]),
-        // .test_output(test_output[63:60])
+        .inp_data(pe15_in_data),
+        .inp_valid(pe15_in_valid),
+        .inp_ready(pe15_in_ready),
+        .inp_dest(pe15_in_dest),
+        .inp_id(pe15_in_id),
+        
+        .outp_data(pe15_out_data),
+        .outp_valid(pe15_out_valid),
+        .outp_ready(pe15_out_ready),
+        .outp_dest(pe15_out_dest),
+        .outp_id(pe15_out_id),
+        
+        .test_input(test_input[63:60]),
+        .test_output(test_output[63:60])
     );
 
-
-// // PE 0 instantiation
-//     (* keep = "true" *) koios_axi_wrap pe_inst_0 (
-//         .clk(clk),
-//         .reset(reset),
-        
-//         .axis_in_data(pe0_in_data),
-//         .axis_in_valid(pe0_in_valid),
-//         .axis_in_ready(pe0_in_ready),
-//         // .axis_in_dest(pe0_in_dest),
-//         .axis_in_id(pe0_in_id),
-//         .axis_in_last(pe0_in_last),
-        
-//         .axis_out_data(pe0_out_data),
-//         .axis_out_valid(pe0_out_valid),
-//         .axis_out_ready(pe0_out_ready),
-//         // .axis_out_dest(pe0_out_dest),
-//         .axis_out_id(pe0_out_id),
-//         .axis_out_last(pe0_out_last)
-
-//         // .test_input(test_input[3:0]),
-//         // .test_output(test_output[3:0])
-//     );
 
 
     wire [127:0] switch_in_0_tdata;

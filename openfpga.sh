@@ -169,7 +169,7 @@ PBF_SCRIPT_PATH=${OPENFPGA_PATH}/openfpga_noc/pbf_scripts
 setup-run-from-config() {
     if [ -z "$1" ]; then
         echo "Error: Please provide a task directory"
-        echo "Usage: setup_fpga_run <task_directory>"
+        echo "Usage: setup-run-from-config <task_directory>"
         return 1
     fi
 

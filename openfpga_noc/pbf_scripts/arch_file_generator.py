@@ -71,12 +71,24 @@ def indent_xml(elem, level=0):
 
 def add_vpr_model(top, 
                 #   port_dict, 
+                north_input_ports, north_output_ports, east_input_ports, east_output_ports, south_input_ports, south_output_ports, west_input_ports, west_output_ports,
                  core_input_ports, core_output_ports, clock_reset_ports,
                   has_clock, clock_port, vpr_arch_file, root, tree):
     # Create the new <model> tag
     new_model = ET.Element('model', {'name': top})
     input_ports = ET.SubElement(new_model, 'input_ports')
     output_ports = ET.SubElement(new_model, 'output_ports')
+
+    # all core outputs as string
+    #
+    output_ports_string = ""
+    for port, size in core_output_ports:
+        output_ports_string += f"{port} "
+
+    # remove space in beginning and end
+    output_ports_string = output_ports_string.strip()
+
+
     ## TODO: Add combinational and sequential type of ports definition in models
 
     # for input_port in port_dict[top]["inputs"]:
@@ -93,10 +105,10 @@ def add_vpr_model(top,
         if port == clock_port:
             input_ports.append(ET.Element('port', {'name': port, 'is_clock': '1'}))
         else:
-            input_ports.append(ET.Element('port', {'name': port}))
+            input_ports.append(ET.Element('port', {'name': port, 'clock': clock_port, 'combinational_sink_ports': output_ports_string}))
     input_ports.append(ET.Comment(' Core input ports'))
     for port, size in core_input_ports:
-        input_ports.append(ET.Element('port', {'name': port}))
+        input_ports.append(ET.Element('port', {'name': port, 'clock': clock_port, 'combinational_sink_ports': output_ports_string}))
     input_ports.append(ET.Comment(' Model does not have router-to-router ports'))
 
     # for output_port in port_dict[top]["outputs"]:
@@ -106,7 +118,7 @@ def add_vpr_model(top,
     #         else:
     #             ET.SubElement(output_ports, 'port', {'name': name})
     for port, size in core_output_ports:
-        output_ports.append(ET.Element('port', {'name': port}))
+        output_ports.append(ET.Element('port', {'name': port, 'clock': clock_port}))
     output_ports.append(ET.Comment(' Model does not have router-to-router ports'))
 
     # Indent 
@@ -116,6 +128,40 @@ def add_vpr_model(top,
     models_element = root.find('.//models')
 
     models_element.append(new_model)
+
+    #  physical model
+    output_ports_string = ""
+    for port, size in core_output_ports + north_output_ports + east_output_ports + south_output_ports + west_output_ports:
+        output_ports_string += f"{port} "
+
+    model_physical= ET.Element('model', {'name': f'{top}_physical'})
+    input_ports_physical = ET.SubElement(model_physical, 'input_ports')
+    for port in clock_reset_ports:
+        if port == clock_port:
+            input_ports_physical.append(ET.Element('port', {'name': port, 'is_clock': '1'}))
+        else:
+            input_ports_physical.append(ET.Element('port', {'name': port, 'clock': clock_port, 'combinational_sink_ports': output_ports_string}))
+    # core input ports
+    input_ports_physical.append(ET.Comment(' Core input ports'))
+    for port, size in core_input_ports:
+        input_ports_physical.append(ET.Element('port', {'name': port, 'clock': clock_port, 'combinational_sink_ports': output_ports_string}))
+    # router-to-router input ports  
+    input_ports_physical.append(ET.Comment(' Router-to-router input ports'))
+    for port, size in north_input_ports + east_input_ports + south_input_ports + west_input_ports:
+        input_ports_physical.append(ET.Element('port', {'name': port, 'clock': clock_port, 'combinational_sink_ports': output_ports_string}))
+    output_ports_physical = ET.SubElement(model_physical, 'output_ports')
+    # core output ports
+    output_ports_physical.append(ET.Comment(' Core output ports'))
+    for port, size in core_output_ports:
+        output_ports_physical.append(ET.Element('port', {'name': port, 'clock': clock_port}))
+    # router-to-router output ports
+    output_ports_physical.append(ET.Comment(' Router-to-router output ports'))
+    for port, size in north_output_ports + east_output_ports + south_output_ports + west_output_ports:
+        output_ports_physical.append(ET.Element('port', {'name': port, 'clock': clock_port}))
+
+    indent_xml(model_physical, level=2)
+    models_element.append(model_physical)
+
     tree.write(vpr_arch_file)
     print(f" ---------- Added model '{top}' in VPR arch file at $arch_dir/vpr_arch.xml")
 
@@ -123,15 +169,17 @@ def add_vpr_model(top,
 def add_vpr_tile(top, 
                 #  port_dict,
                  north_input_ports, north_output_ports, east_input_ports, east_output_ports, south_input_ports, south_output_ports, west_input_ports, west_output_ports, core_input_ports, core_output_ports, clock_reset_ports, 
+                 tile_size,
                  has_clock, clock_port, vpr_arch_file, root, tree):
     interface = 'axis'
     # Create the new <tile> tag
-    new_tile = ET.Element('tile', {'name': f'{top}_tile', 'width': '5', 'height': '5'})
+    new_tile = ET.Element('tile', {'name': f'{top}_tile', 'width': f'{tile_size[0]}', 'height': f'{tile_size[1]}'})
     sub_tile = ET.SubElement(new_tile, 'sub_tile', {'name': f'{top}_tile'})
     equivalent_sites = ET.SubElement(sub_tile, 'equivalent_sites')
     ET.SubElement(equivalent_sites, 'site', {'pb_type': f'{top}_tile'})
 
-    
+    tile_size_x = tile_size[0] -1
+    tile_size_y = tile_size[1] -1
     # First collect all ports by direction to use for both fc_override and pinlocations
     # north_input_ports = []
     # north_output_ports = []
@@ -227,7 +275,7 @@ def add_vpr_tile(top,
     sub_tile.append(ET.Comment(' Set fc_in and fc_out = 0 for all the router-to-router ports and a default value of fc_in=0.10 and fc_out=0.15 for all other core ports'))
     # Create the base fc element with appropriate values for router
     if interface == 'axis' or 'router' in top.lower() or 'noc' in top.lower():
-        fc = ET.SubElement(sub_tile, 'fc', {'in_type': 'frac', 'in_val': '0.055', 'out_type': 'frac', 'out_val': '0.075'})
+        fc = ET.SubElement(sub_tile, 'fc', {'in_type': 'frac', 'in_val': '0.15', 'out_type': 'frac', 'out_val': '0.10'})
 
         # Add comment for north ports
         fc.append(ET.Comment(' North directional ports '))
@@ -271,23 +319,56 @@ def add_vpr_tile(top,
 
         # Create location elements for each side
         if top_port_names:
-            ET.SubElement(pinlocations, 'loc', {'side': 'top', 'xoffset': '4', 'yoffset': '0'}).text = " ".join(top_port_names)
+            pinlocations.append(ET.Comment(' Top directional ports '))
+            ET.SubElement(pinlocations, 'loc', {'side': 'top', 'xoffset': '0', 'yoffset': f'{tile_size_y}'}).text = " ".join(top_port_names)
         if right_port_names:
-            ET.SubElement(pinlocations, 'loc', {'side': 'right', 'xoffset': '0', 'yoffset': '4'}).text = " ".join(right_port_names)
+            pinlocations.append(ET.Comment(' Right directional ports '))
+            ET.SubElement(pinlocations, 'loc', {'side': 'right', 'xoffset': f'{tile_size_x}', 'yoffset': '0'}).text = " ".join(right_port_names)
         if bottom_port_names:
-            ET.SubElement(pinlocations, 'loc', {'side': 'bottom', 'xoffset': '4', 'yoffset': '0'}).text = " ".join(bottom_port_names)
+            pinlocations.append(ET.Comment(' Bottom directional ports '))
+            ET.SubElement(pinlocations, 'loc', {'side': 'bottom', 'xoffset': '0', 'yoffset': '0'}).text = " ".join(bottom_port_names)
         if left_port_names:
-            ET.SubElement(pinlocations, 'loc', {'side': 'left', 'xoffset': '0', 'yoffset': '4'}).text = " ".join(left_port_names)
+            pinlocations.append(ET.Comment(' Left directional ports '))
+            ET.SubElement(pinlocations, 'loc', {'side': 'left', 'xoffset': '0', 'yoffset': '0'}).text = " ".join(left_port_names)
         
-        # Add clocks and core ports
-        if clock_reset_port_names:
-            ET.SubElement(pinlocations, 'loc', {'side': 'left', 'xoffset': '0', 'yoffset': '0'}).text = " ".join(clock_reset_port_names)
+        for port, size in core_input_ports:
+            if "data" in port.lower():
+                data_in_port_name = f"{top}_tile.{port}"
+                data_in_port_size = size
+        for port, size in core_output_ports:
+            if "data" in port.lower():
+                data_out_port_name = f"{top}_tile.{port}"
+                data_out_port_size = size
         
-        # Split core ports into two locations
-        if core_port_names:
-            half = len(core_port_names) // 2
-            ET.SubElement(pinlocations, 'loc', {'side': 'bottom', 'xoffset': '0', 'yoffset': '0'}).text = " ".join(core_port_names[:half])
-            ET.SubElement(pinlocations, 'loc', {'side': 'bottom', 'xoffset': '1', 'yoffset': '0'}).text = " ".join(core_port_names[half:])
+        #  Partition 10 inputs and 10 output pins per offset
+        #  data in port size and out port size will be same
+        pinlocations.append(ET.Comment(' Data input and output ports partitioned every 10 pins on left and right sides '))
+        if data_in_port_name and data_out_port_name:
+            num_partitions = (data_in_port_size + 9) // 10  # Ceiling division
+            # half of these partitions on left and half on right
+            for i in range(num_partitions):
+                xoffset = 0 if i < (num_partitions + 1) // 2 else tile_size_x
+                yoffset = (i % ((num_partitions + 1) // 2)) + 1  # Spread along y-axis
+                start_idx = i * 10
+                end_idx = min(start_idx + 10, data_in_port_size)
+                in_ports_partition = [f"{data_in_port_name}[{j}]" for j in range(start_idx, end_idx)]
+                out_ports_partition = [f"{data_out_port_name}[{j}]" for j in range(start_idx, end_idx)]
+                ET.SubElement(pinlocations, 'loc', {'side': 'left' if xoffset == 0 else 'right', 'xoffset': str(xoffset), 'yoffset': str(yoffset)}).text = " ".join(in_ports_partition+out_ports_partition)
+                # ET.SubElement(pinlocations, 'loc', {'side': 'left' if xoffset == 0 else 'right', 'xoffset': str(xoffset), 'yoffset': str(yoffset + 1)}).text = " ".join(out_ports_partition)
+
+        #  all remaining core ports and clk reset on top and bottom
+        remaining_core_ports = [port for port in core_port_names + clock_reset_port_names if port not in (data_in_port_name, data_out_port_name)]
+        if remaining_core_ports:
+            pinlocations.append(ET.Comment(' Remaining core ports and clock/reset ports '))
+            # Split half on top and half on bottom
+            half_index = (len(remaining_core_ports) + 1) // 2
+            top_ports = remaining_core_ports[:half_index]
+            bottom_ports = remaining_core_ports[half_index:]
+            if top_ports:
+                ET.SubElement(pinlocations, 'loc', {'side': 'top', 'xoffset': '1', 'yoffset': f'{tile_size_y}'}).text = " ".join(top_ports)
+            if bottom_ports:
+                ET.SubElement(pinlocations, 'loc', {'side': 'bottom', 'xoffset': '1', 'yoffset': '0'}).text = " ".join(bottom_ports)
+
     else:
         # For non-router tiles, use the default spread pattern
         ET.SubElement(sub_tile, 'pinlocations', {'pattern': 'spread'})
@@ -347,18 +428,109 @@ def add_vpr_pb_type(top,
     for port, size in west_output_ports:
         ET.SubElement(new_pb_type, 'output', {'name': port, 'num_pins': str(size)})
 
+# physical mode - not used in PnR
+    mode_0 = ET.SubElement(new_pb_type, 'mode', {'name': 'physical'})
+    mode_0.append(ET.Comment('This mode will have both core ports and router-to-router ports'))
+    mode_0.append(ET.Comment('Is not used in PnR, but required for OpenFPGA flow'))
+    pb_type_0 = ET.SubElement(mode_0, 'pb_type', {'name': f'{top}_physical', 'blif_model': f'.subckt {top}_physical', 'num_pb': '1'})
+    pb_type_0.append(ET.Comment('Clock and reset ports'))
+    for port in clock_reset_ports:
+        if port == clock_port:
+            ET.SubElement(pb_type_0, 'clock', {'name': clock_port, 'num_pins': '1'})
+        else:
+            ET.SubElement(pb_type_0, 'input', {'name': port, 'num_pins': '1'})
+    pb_type_0.append(ET.Comment('Core input ports'))
+    for port, size in core_input_ports:
+        ET.SubElement(pb_type_0, 'input', {'name': port, 'num_pins': str(size)})
+    pb_type_0.append(ET.Comment('Core output ports'))
+    for port, size in core_output_ports:
+        ET.SubElement(pb_type_0, 'output', {'name': port, 'num_pins': str(size)})
+    pb_type_0.append(ET.Comment('Router-to-router ports'))
+    pb_type_0.append(ET.Comment('North directional input ports'))
+    for port, size in north_input_ports:
+        ET.SubElement(pb_type_0, 'input', {'name': port, 'num_pins': str(size)})
+    pb_type_0.append(ET.Comment('North directional output ports'))
+    for port, size in north_output_ports:
+        ET.SubElement(pb_type_0, 'output', {'name': port, 'num_pins': str(size)})
+    pb_type_0.append(ET.Comment('East directional input ports'))
+    for port, size in east_input_ports:
+        ET.SubElement(pb_type_0, 'input', {'name': port, 'num_pins': str(size)})
+    pb_type_0.append(ET.Comment('East directional output ports'))
+    for port, size in east_output_ports:
+        ET.SubElement(pb_type_0, 'output', {'name': port, 'num_pins': str(size)})
+    pb_type_0.append(ET.Comment('South directional input ports'))
+    for port, size in south_input_ports:
+        ET.SubElement(pb_type_0, 'input', {'name': port, 'num_pins': str(size)})
+    pb_type_0.append(ET.Comment('South directional output ports'))
+    for port, size in south_output_ports:
+        ET.SubElement(pb_type_0, 'output', {'name': port, 'num_pins': str(size)})
+    pb_type_0.append(ET.Comment('West directional input ports'))
+    for port, size in west_input_ports:
+        ET.SubElement(pb_type_0, 'input', {'name': port, 'num_pins': str(size)})
+    pb_type_0.append(ET.Comment('West directional output ports'))
+    for port, size in west_output_ports:
+        ET.SubElement(pb_type_0, 'output', {'name': port, 'num_pins': str(size)})
+
+    # timing constraints for physical mode
+    pb_type_0.append(ET.Comment('Timing constraints'))
+    if has_clock:
+        pb_type_0.append(ET.Comment('Input timing constraints'))
+        for port, size in core_input_ports:
+            ET.SubElement(pb_type_0, 'T_setup', {'value': '66e-12', 'port': f'{top}_physical.{port}', 'clock': clock_port})
+            ET.SubElement(pb_type_0, 'T_clock_to_Q', {'max': '42e-12', 'min': '37e-12', 'port': f'{top}_physical.{port}', 'clock': clock_port})
+        # input constraints for reset
+        for port in clock_reset_ports:
+            if port != clock_port:
+                ET.SubElement(pb_type_0, 'T_setup', {'value': '66e-12', 'port': f'{top}_physical.{port}', 'clock': clock_port})
+                ET.SubElement(pb_type_0, 'T_clock_to_Q', {'max': '42e-12', 'min': '37e-12', 'port': f'{top}_physical.{port}', 'clock': clock_port})
+        # directional input ports
+        for port, size in north_input_ports + east_input_ports + south_input_ports + west_input_ports:
+            ET.SubElement(pb_type_0, 'T_setup', {'value': '66e-12', 'port': f'{top}_physical.{port}', 'clock': clock_port})
+            ET.SubElement(pb_type_0, 'T_clock_to_Q', {'max': '42e-12', 'min': '37e-12', 'port': f'{top}_physical.{port}', 'clock': clock_port})
+        pb_type_0.append(ET.Comment('Output timing constraints'))
+        for port, size in core_output_ports:
+            ET.SubElement(pb_type_0, 'T_setup', {'value': '66e-12', 'port': f'{top}_physical.{port}', 'clock': clock_port})
+            ET.SubElement(pb_type_0, 'T_clock_to_Q', {'max': '42e-12', 'min': '37e-12', 'port': f'{top}_physical.{port}', 'clock': clock_port})
+        # directional output ports
+        pb_type_0.append(ET.Comment('Directional output ports timing constraints'))
+        for port, size in north_output_ports + east_output_ports + south_output_ports + west_output_ports:
+            ET.SubElement(pb_type_0, 'T_setup', {'value': '66e-12', 'port': f'{top}_physical.{port}', 'clock': clock_port})
+            ET.SubElement(pb_type_0, 'T_clock_to_Q', {'max': '42e-12', 'min': '37e-12', 'port': f'{top}_physical.{port}', 'clock': clock_port})
+
+        # delay constant
+        for port_out, size_out in core_output_ports + north_output_ports + east_output_ports + south_output_ports + west_output_ports:
+            for port_in, size_in in core_input_ports:
+                ET.SubElement(pb_type_0, 'delay_constant', {'max': '1.78e-9', 'in_port': f'{top}_physical.{port_in}', 'out_port': f'{top}_physical.{port_out}'})
+            for port_in in clock_reset_ports:
+                if port_in != clock_port:
+                    ET.SubElement(pb_type_0, 'delay_constant', {'max': '1.78e-9', 'in_port': f'{top}_physical.{port_in}', 'out_port': f'{top}_physical.{port_out}'})
+            for port_in, size_in in north_input_ports + east_input_ports + south_input_ports + west_input_ports:
+                ET.SubElement(pb_type_0, 'delay_constant', {'max': '1.78e-9', 'in_port': f'{top}_physical.{port_in}', 'out_port': f'{top}_physical.{port_out}'})
+
+    pb_type_0.append(ET.Comment('Interconnects to top-level pb_type: Did not include a local crossbar'))
+    interconnect_0 = ET.SubElement(mode_0, 'interconnect')
+
+    for port in clock_reset_ports:
+        if port != clock_port:
+            ET.SubElement(interconnect_0, 'direct', {'name': f'phy_connection_{port}', 'input': f'{top}_tile.{port}', 'output': f'{top}_physical.{port}'})
+    
+    for port, size in core_input_ports:
+        ET.SubElement(interconnect_0, 'direct', {'name': f'phy_connection_{port}', 'input': f'{top}_tile.{port}', 'output': f'{top}_physical.{port}'})
+    for port, size in north_input_ports + east_input_ports + south_input_ports + west_input_ports:
+        ET.SubElement(interconnect_0, 'direct', {'name': f'phy_connection_{port}', 'input': f'{top}_tile.{port}', 'output': f'{top}_physical.{port}'})
+
+    for port, size in core_output_ports:
+        ET.SubElement(interconnect_0, 'direct', {'name': f'phy_connection_{port}', 'input': f'{top}_physical.{port}', 'output': f'{top}_tile.{port}'})
+    for port, size in north_output_ports + east_output_ports + south_output_ports + west_output_ports:
+        ET.SubElement(interconnect_0, 'direct', {'name': f'phy_connection_{port}', 'input': f'{top}_physical.{port}', 'output': f'{top}_tile.{port}'})
+
+
+# logical mode used in PnR
+    new_pb_type.append(ET.Comment('Logical mode used in PnR'))
     mode_1 = ET.SubElement(new_pb_type, 'mode', {'name': top})
     mode_1.append(ET.Comment('This mode will only have core ports, no router-to-router ports'))
     pb_type_1 = ET.SubElement(mode_1, 'pb_type', {'name': top, 'blif_model': f'.subckt {top}', 'num_pb': '1'})
-    # for input_port in port_dict[top]["inputs"]:
-    #     for name, size in input_port.items():
-    #         if name == clock_port:
-    #             ET.SubElement(pb_type_1, 'clock', {'name': clock_port, 'num_pins': '1'})
-    #         else:
-    #             ET.SubElement(pb_type_1, 'input', {'name': name, 'num_pins': f'{size}'})
-    # for output_port in port_dict[top]["outputs"]:
-    #     for name, size in output_port.items():
-    #         ET.SubElement(pb_type_1, 'output', {'name': name, 'num_pins': f'{size}'})
+
     pb_type_1.append(ET.Comment('Clock and reset ports'))
     for port in clock_reset_ports:
         if port == clock_port:
@@ -375,31 +547,37 @@ def add_vpr_pb_type(top,
 
     pb_type_1.append(ET.Comment('Timing constraints'))
     if has_clock:
-        # for input_port in port_dict[top]["inputs"]:
-        #     for name, size in input_port.items():
-        #         if name != clock_port:
-        #             ET.SubElement(pb_type_1, 'T_setup', {'value': '66e-12', 'port': f'{top}.{name}', 'clock': clock_port})
-        #             ET.SubElement(pb_type_1, 'T_clock_to_Q', {'max': '42e-12', 'min': '37e-12', 'port': f'{top}.{name}', 'clock': clock_port})
         pb_type_1.append(ET.Comment('Input timing constraints'))
         for port, size in core_input_ports:
             ET.SubElement(pb_type_1, 'T_setup', {'value': '66e-12', 'port': f'{top}.{port}', 'clock': clock_port})
             ET.SubElement(pb_type_1, 'T_clock_to_Q', {'max': '42e-12', 'min': '37e-12', 'port': f'{top}.{port}', 'clock': clock_port})
+        # input constraints for reset
+        for port in clock_reset_ports:
+            if port != clock_port:
+                ET.SubElement(pb_type_1, 'T_setup', {'value': '66e-12', 'port': f'{top}.{port}', 'clock': clock_port})
+                ET.SubElement(pb_type_1, 'T_clock_to_Q', {'max': '42e-12', 'min': '37e-12', 'port': f'{top}.{port}', 'clock': clock_port})
 
         pb_type_1.append(ET.Comment('Output timing constraints'))
         for port, size in core_output_ports:
             ET.SubElement(pb_type_1, 'T_setup', {'value': '66e-12', 'port': f'{top}.{port}', 'clock': clock_port})
             ET.SubElement(pb_type_1, 'T_clock_to_Q', {'max': '42e-12', 'min': '37e-12', 'port': f'{top}.{port}', 'clock': clock_port})
 
-        # for output_port in port_dict[top]["outputs"]:
-        #     for name, size in output_port.items():
-        #         ET.SubElement(pb_type_1, 'T_setup', {'value': '66e-12', 'port': f'{top}.{name}', 'clock': clock_port})
-        #         ET.SubElement(pb_type_1, 'T_clock_to_Q', {'max': '42e-12', 'min': '37e-12', 'port': f'{top}.{name}', 'clock': clock_port})
+        # delay constant
+        for port_out, size_out in core_output_ports:
+            for port_in, size_in in core_input_ports:
+                ET.SubElement(pb_type_1, 'delay_constant', {'max': '1.78e-9', 'in_port': f'{top}.{port_in}', 'out_port': f'{top}.{port_out}'})
+            for port_in in clock_reset_ports:
+                if port_in != clock_port:
+                    ET.SubElement(pb_type_1, 'delay_constant', {'max': '1.78e-9', 'in_port': f'{top}.{port_in}', 'out_port': f'{top}.{port_out}'})
+        
 
     pb_type_1.append(ET.Comment('Interconnects to top-level pb_type: Did not include a local crossbar'))
     interconnect_1 = ET.SubElement(mode_1, 'interconnect')
 
-    # for input_port in port_dict[top]["inputs"]:
-        # for name, size in input_port.items():
+    for port in clock_reset_ports:
+        if port != clock_port:
+            ET.SubElement(interconnect_1, 'direct', {'name': f'connection_{port}', 'input': f'{top}_tile.{port}', 'output': f'{top}.{port}'})
+
     for port, size in core_input_ports:
         ET.SubElement(interconnect_1, 'direct', {'name': f'connection_{port}', 'input': f'{top}_tile.{port}', 'output': f'{top}.{port}'})
 
@@ -704,13 +882,12 @@ def generate_arch_files(yosys_path, verilog_file, spice_file, top, output_dir, v
             exit(1)
         yosys_path = os.getenv('OPENFPGA_PATH', '') + '/build/yosys/bin/yosys'
     if not vpr_arch:
-        vpr_arch = os.getenv('OPENFPGA_PATH', '') + '/openfpga_flow/vpr_arch/k6_frac_N10_40nm.xml'
+        # vpr_arch = os.getenv('OPENFPGA_PATH', '') + '/openfpga_flow/vpr_arch/k6_frac_N10_40nm.xml'
+        vpr_arch = os.getenv('OPENFPGA_PATH', '') + '/openfpga_flow/vpr_arch/k6_frac_N10_tileable_adder_chain_dpram8K_dsp36_fracff_40nm.xml'
         print(f"WARNING: Template VPR arch file not found using default file at: {vpr_arch}")
-        exit(1)
     if not openfpga_arch:
         openfpga_arch = os.getenv('OPENFPGA_PATH', '') + '/openfpga_flow/openfpga_arch/k6_frac_N10_40nm_openfpga.xml'
         print("WARNING: Template OpenFPGA arch file not found using default file at: {openfpga_arch}")
-        exit(1)
     if not spice_file:
         print("WARNING: Spice file not provided, using verilog file as spice file")
         spice_file = verilog_file
@@ -722,6 +899,9 @@ def generate_arch_files(yosys_path, verilog_file, spice_file, top, output_dir, v
     # copy vpr template to current arch dir
     # shutil.copy(f'{vpr_arch}', f'{vpr_output_dir}/{name}_vpr.xml')
     # vpr_arch_file = f'{vpr_output_dir}/{name}_vpr.xml'
+    print(60*'*')
+    print(f"vpr arch template: {vpr_arch}")
+    print(f"output dir: {vpr_output_dir}")
     shutil.copy(f'{vpr_arch}', f'{vpr_output_dir}/vpr_arch.xml')
     vpr_arch_file = f'{vpr_output_dir}/vpr_arch.xml'
 
@@ -825,6 +1005,16 @@ def generate_arch_files(yosys_path, verilog_file, spice_file, top, output_dir, v
             else:
                 core_output_ports.append((name, size))
 
+    for port, size in core_input_ports:
+        if "data" in port.lower():
+            data_size = size
+    
+    tile_size_y = (data_size + 9) // 10
+    tile_size_x =  4
+    tile_size = (tile_size_x, tile_size_y)
+    
+    # print(f"X is {tile_size[0]}, Y is {tile_size[1]} for tile size based on data input port size {data_size}")
+    
 
     # write vpr file
     vpr_tree = ET.parse(vpr_arch_file)
@@ -834,6 +1024,7 @@ def generate_arch_files(yosys_path, verilog_file, spice_file, top, output_dir, v
     # add model tag
     add_vpr_model(top, 
                 #   port_dict,
+                north_input_ports, north_output_ports, east_input_ports, east_output_ports, south_input_ports, south_output_ports, west_input_ports, west_output_ports,
                   core_input_ports, core_output_ports, clock_reset_ports, 
                   has_clock, clock_port, vpr_arch_file, vpr_root, vpr_tree)
 
@@ -841,6 +1032,7 @@ def generate_arch_files(yosys_path, verilog_file, spice_file, top, output_dir, v
     add_vpr_tile(top,
                 #   port_dict,
                  north_input_ports, north_output_ports, east_input_ports, east_output_ports, south_input_ports, south_output_ports, west_input_ports, west_output_ports, core_input_ports, core_output_ports, clock_reset_ports,
+                 tile_size,
                  has_clock, clock_port, vpr_arch_file, vpr_root, vpr_tree)
  
 
@@ -852,7 +1044,7 @@ def generate_arch_files(yosys_path, verilog_file, spice_file, top, output_dir, v
 
     add_vpr_layout_tag(top, port_dict, has_clock, clock_port, vpr_arch_file, vpr_root, vpr_tree)
 
-    add_vpr_noc_tag(top, vpr_arch_file, vpr_root, vpr_tree)
+    # add_vpr_noc_tag(top, vpr_arch_file, vpr_root, vpr_tree)
     # print(f"# Completed writing VPR arch file with '{top}' as a hard block")
 
     # write openfpga file

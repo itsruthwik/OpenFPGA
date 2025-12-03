@@ -118,52 +118,46 @@
         <port name="lut6_out"/>
       </output_ports>
     </model>
-    <model name="dpram_512x64">
-      <input_ports>
-        <!-- write address lines -->
-        <port name="waddr" clock="clk"/>
-        <!-- read address lines -->
-        <port name="raddr" clock="clk"/>
-        <!-- data lines can be broken down into smaller bit widths minimum size 1 -->
-        <port name="data_in" clock="clk"/>
-        <!-- write enable -->
-        <port name="wen" clock="clk"/>
-        <!-- read enable -->
-        <port name="ren" clock="clk"/>
-        <!-- memories are often clocked -->
-        <port name="clk" is_clock="1"/>
-      </input_ports>
-      <output_ports>
-        <!-- output can be broken down into smaller bit widths minimum size 1 -->
-        <port name="data_out" clock="clk"/>
-      </output_ports>
-    </model>
-    <!-- <model name="single_port_ram">
+    <model name="single_port_ram">
       <input_ports>
         <port name="we" clock="clk" combinational_sink_ports="out"/>
+        <!-- control -->
         <port name="addr" clock="clk" combinational_sink_ports="out"/>
+        <!-- address lines -->
         <port name="data" clock="clk" combinational_sink_ports="out"/>
+        <!-- data lines can be broken down into smaller bit widths minimum size 1 -->
         <port name="clk" is_clock="1"/>
+        <!-- memories are often clocked -->
       </input_ports>
       <output_ports>
         <port name="out" clock="clk"/>
+        <!-- output can be broken down into smaller bit widths minimum size 1 -->
       </output_ports>
     </model>
     <model name="dual_port_ram">
       <input_ports>
         <port name="we1" clock="clk" combinational_sink_ports="out1"/>
+        <!-- write enable -->
         <port name="we2" clock="clk" combinational_sink_ports="out2"/>
+        <!-- write enable -->
         <port name="addr1" clock="clk" combinational_sink_ports="out1"/>
+        <!-- address lines -->
         <port name="addr2" clock="clk" combinational_sink_ports="out2"/>
+        <!-- address lines -->
         <port name="data1" clock="clk" combinational_sink_ports="out1"/>
+        <!-- data lines can be broken down into smaller bit widths minimum size 1 -->
         <port name="data2" clock="clk" combinational_sink_ports="out2"/>
+        <!-- data lines can be broken down into smaller bit widths minimum size 1 -->
         <port name="clk" is_clock="1"/>
+        <!-- memories are often clocked -->
       </input_ports>
       <output_ports>
         <port name="out1" clock="clk"/>
+        <!-- output can be broken down into smaller bit widths minimum size 1 -->
         <port name="out2" clock="clk"/>
+        <!-- output can be broken down into smaller bit widths minimum size 1 -->
       </output_ports>
-    </model> -->
+    </model>
     <!-- <model name="mult_36">
       <input_ports>
         <port name="A" combinational_sink_ports="Y"/>
@@ -726,33 +720,7 @@
         </pinlocations>
       </sub_tile>
     </tile>
-    <tile name="memory" height="3" area="137668">
-      <sub_tile name="memory">
-        <equivalent_sites>
-          <site pb_type="memory"/>
-        </equivalent_sites>
-        <input name="waddr" num_pins="9"/>
-        <input name="raddr" num_pins="9"/>
-        <input name="data_in" num_pins="64"/>
-        <input name="wen" num_pins="1"/>
-        <input name="ren" num_pins="1"/>
-        <output name="data_out" num_pins="64"/>
-        <clock name="clk" num_pins="1"/>
-        <fc in_type="frac" in_val="0.15" out_type="frac" out_val="0.10">
-          <fc_override port_name="clk" fc_type="frac" fc_val="0"/>
-        </fc>
-        <pinlocations pattern="perimeter"/>
-        <!-- <pinlocations pattern="custom">
-          <loc side="left">memory.clk</loc>
-          <loc side="top"/>
-          <loc side="right" xoffset="0" yoffset="0">memory.waddr[4:0] memory.raddr[4:0]</loc>
-          <loc side="right" xoffset="0" yoffset="1">memory.data_in[3:0] memory.wen memory.data_out[3:0]</loc>
-         
-          <loc side="bottom">memory.waddr[9:5] memory.raddr[9:5] memory.data_in[7:4] memory.ren memory.data_out[7:4]</loc>
-        </pinlocations> -->
-      </sub_tile>
-    </tile>
-    <!-- <tile name="memory" height="3" width="1" area="137668">
+    <tile name="memory" height="3" width="1" area="137668">
       <sub_tile name="memory">
         <equivalent_sites>
           <site pb_type="memory" pin_mapping="direct"/>
@@ -767,6 +735,7 @@
         <fc in_type="frac" in_val="0.15" out_type="frac" out_val="0.10">
           <fc_override fc_type="frac" fc_val="0" port_name="clk"/>
         </fc>  
+        <!-- <pinlocations pattern="spread"/> -->
         <pinlocations pattern="custom">
           <loc side="left" yoffset="0">memory.out[0:4] memory.data[0:4] memory.addr1[0:2]</loc>
           <loc side="left" yoffset="1">memory.out[5:9] memory.data[5:9] memory.addr1[3:5]</loc>
@@ -779,7 +748,7 @@
           <loc side="bottom">memory.out[35:39] memory.data[35:39] memory.addr2[9:10] memory.we2</loc>         
         </pinlocations> 
       </sub_tile>
-    </tile> -->
+    </tile>
     <tile name="dsp_top" height="4" width="1" area="253779">
       <sub_tile name="dsp_top">
         <equivalent_sites>
@@ -987,37 +956,24 @@
   <!-- Physical descriptions begin -->
   <layout>
   <!-- <layout tileable="true" through_channel="true" opin2all_sides="true" concat_wire="true" concat_pass_wire="true"> -->
-  <fixed_layout name="large" width="400" height="400">
-    <perimeter type="io" priority="100"/><corners type="EMPTY" priority="110"/>
-    <single type="axi_hbm_tile" x="1" y="0" priority="105"/><single type="axi_eth_tile" x="278" y="0" priority="105"/>
-    <fill type="clb" priority="10"/>
-    
-    <col type="memory" startx="7"  starty="1" repeatx="11" priority="30"/>
-    <col type="EMPTY"  startx="7"  starty="1" repeatx="11" priority="29"/>
-    
-    <col type="dsp_top" startx="3" starty="1" repeatx="4" priority="20"/>
-    <col type="EMPTY"   startx="3" starty="1" repeatx="4" priority="19"/>
+    <fixed_layout name="large" width="400" height="400">
+      <perimeter type="io" priority="100"/>
+      <corners type="EMPTY" priority="110"/>
 
-    <!-- <single type="router_wrap_tile" x="W/8" y="H/8"   priority="50"/>
-    <single type="router_wrap_tile" x="W/8" y="3*H/8" priority="50"/>
-    <single type="router_wrap_tile" x="W/8" y="5*H/8" priority="50"/>
-    <single type="router_wrap_tile" x="W/8" y="7*H/8" priority="50"/>
-    
-    <single type="router_wrap_tile" x="3*W/8" y="H/8"   priority="50"/>
-    <single type="router_wrap_tile" x="3*W/8" y="3*H/8" priority="50"/>
-    <single type="router_wrap_tile" x="3*W/8" y="5*H/8" priority="50"/>
-    <single type="router_wrap_tile" x="3*W/8" y="7*H/8" priority="50"/>
-    
-    <single type="router_wrap_tile" x="5*W/8" y="H/8"   priority="50"/>
-    <single type="router_wrap_tile" x="5*W/8" y="3*H/8" priority="50"/>
-    <single type="router_wrap_tile" x="5*W/8" y="5*H/8" priority="50"/>
-    <single type="router_wrap_tile" x="5*W/8" y="7*H/8" priority="50"/> 
-    
-    <single type="router_wrap_tile" x="7*W/8" y="H/8"   priority="50"/>
-    <single type="router_wrap_tile" x="7*W/8" y="3*H/8" priority="50"/>
-    <single type="router_wrap_tile" x="7*W/8" y="5*H/8" priority="50"/>
-    <single type="router_wrap_tile" x="7*W/8" y="7*H/8" priority="50"/> -->
-  </fixed_layout>
+      <!-- <row type="axi_hbm_tile" startx="1" starty="0" priority="105"/> -->
+    <single type="axi_hbm_tile" x="1" y="0" priority="105"/>
+    <single type="axi_eth_tile" x="390" y="0" priority="105"/>
+
+      <fill type="clb" priority="10"/>
+
+      <!--Column of 'memory' with 'EMPTY' blocks wherever a 'memory' does not fit. Vertical offset by 1 for perimeter.-->
+    <col type="memory" startx="5"  starty="1" repeatx="8" priority="30"/>
+    <col type="EMPTY"  startx="5"  starty="1" repeatx="8" priority="29"/>
+
+      <!--Column of 'mult_36' with 'EMPTY' blocks wherever a 'mult_36' does not fit. Vertical offset by 1 for perimeter.-->
+    <col type="dsp_top" startx="3" starty="1" repeatx="8" priority="20"/>
+    <col type="EMPTY"   startx="3" starty="1" repeatx="8" priority="19"/>
+    </fixed_layout>
   </layout>
   <device>
     <!-- VB & JL: Using Ian Kuon's transistor sizing and drive strength data for routing, at 40 nm. Ian used BPTM 
@@ -1078,9 +1034,6 @@
   </segmentlist>
   <directlist>
     <direct name="adder_carry" from_pin="clb.cout" to_pin="clb.cin" x_offset="0" y_offset="-1" z_offset="0"/>
-    <!-- Direct connect from one DSP to the DSP directly below it -->
-    <direct name="dsp_out_chain" from_pin="dsp_top.chainout" from_side="bottom" to_pin="dsp_top.chainin" to_side="top" x_offset="0" y_offset="-4" z_offset="0"/>
-    <direct name="dsp_in_chain" from_pin="dsp_top.scanout" from_side="bottom" to_pin="dsp_top.scanin" to_side="top" x_offset="0" y_offset="-4" z_offset="0"/>
   </directlist>
   <complexblocklist>
     <!-- Define I/O pads begin -->
@@ -3360,7 +3313,7 @@
 
 	  Overall internal delay of the RAM is T_clk_to_q (inputs) + delay_constant + T_setup (outputs)
     -->
-    <!-- <pb_type name="memory">
+    <pb_type name="memory">
       <input name="addr1" num_pins="11"/>
       <input name="addr2" num_pins="11"/>
       <input name="data" num_pins="40"/>
@@ -3368,8 +3321,7 @@
       <input name="we2" num_pins="1"/>
       <output name="out" num_pins="40"/>
       <clock name="clk" num_pins="1"/>
-      
-
+      <!-- Specify single port mode first -->
       <mode name="mem_512x40_sp">
         <pb_type name="mem_512x40_sp" blif_model=".subckt single_port_ram" class="memory" num_pb="1">
           <input name="addr" num_pins="9" port_class="address"/>
@@ -3481,7 +3433,7 @@
         </interconnect>
       </mode>
 
-
+      <!-- Specify true dual port mode next -->
       <mode name="mem_1024x20_dp">
         <pb_type name="mem_1024x20_dp" blif_model=".subckt dual_port_ram" class="memory" num_pb="1">
           <input name="addr1" num_pins="10" port_class="address1"/>
@@ -3598,62 +3550,6 @@
           <direct name="dataout2" input="mem_2048x10_dp.out2" output="memory.out[19:10]">
           </direct>
           <direct name="clk" input="memory.clk" output="mem_2048x10_dp.clk">
-          </direct>
-        </interconnect>
-      </mode>
-    </pb_type> -->
-    <pb_type name="memory">
-      <input name="waddr" num_pins="9"/>
-      <input name="raddr" num_pins="9"/>
-      <input name="data_in" num_pins="64"/>
-      <input name="wen" num_pins="1"/>
-      <input name="ren" num_pins="1"/>
-      <output name="data_out" num_pins="64"/>
-      <clock name="clk" num_pins="1"/>
-      <!-- Specify the 512x64=8Kbit memory block
-           Note: the delay numbers are extracted from VPR flagship XML without modification
-                 Should align to the process technology we using to create the 16K dual-port RAM
-        -->
-      <mode name="mem_512x64_dp">
-        <pb_type name="mem_512x64_dp" blif_model=".subckt dpram_512x64" num_pb="1">
-          <input name="waddr" num_pins="9" port_class="address1"/>
-          <input name="raddr" num_pins="9" port_class="address2"/>
-          <input name="data_in" num_pins="64" port_class="data_in1"/>
-          <input name="wen" num_pins="1" port_class="write_en1"/>
-          <input name="ren" num_pins="1" port_class="write_en2"/>
-          <output name="data_out" num_pins="64" port_class="data_out1"/>
-          <clock name="clk" num_pins="1" port_class="clock"/>
-          <T_setup value="509e-12" port="mem_512x64_dp.waddr" clock="clk"/>
-          <T_setup value="509e-12" port="mem_512x64_dp.raddr" clock="clk"/>
-          <T_setup value="509e-12" port="mem_512x64_dp.data_in" clock="clk"/>
-          <T_setup value="509e-12" port="mem_512x64_dp.wen" clock="clk"/>
-          <T_setup value="509e-12" port="mem_512x64_dp.ren" clock="clk"/>
-          <T_clock_to_Q max="1.234e-9" port="mem_512x64_dp.data_out" clock="clk"/>
-          <power method="pin-toggle">
-            <port name="clk" energy_per_toggle="17.9e-12"/>
-            <static_power power_per_instance="0.0"/>
-          </power>
-        </pb_type>
-        <interconnect>
-          <direct name="waddress" input="memory.waddr" output="mem_512x64_dp.waddr">
-            <delay_constant max="132e-12" in_port="memory.waddr" out_port="mem_512x64_dp.waddr"/>
-          </direct>
-          <direct name="raddress" input="memory.raddr" output="mem_512x64_dp.raddr">
-            <delay_constant max="132e-12" in_port="memory.raddr" out_port="mem_512x64_dp.raddr"/>
-          </direct>
-          <direct name="data_input" input="memory.data_in" output="mem_512x64_dp.data_in">
-            <delay_constant max="132e-12" in_port="memory.data_in" out_port="mem_512x64_dp.data_in"/>
-          </direct>
-          <direct name="writeen" input="memory.wen" output="mem_512x64_dp.wen">
-            <delay_constant max="132e-12" in_port="memory.wen" out_port="mem_512x64_dp.wen"/>
-          </direct>
-          <direct name="readen" input="memory.ren" output="mem_512x64_dp.ren">
-            <delay_constant max="132e-12" in_port="memory.ren" out_port="mem_512x64_dp.ren"/>
-          </direct>
-          <direct name="dataout" input="mem_512x64_dp.data_out" output="memory.data_out">
-            <delay_constant max="40e-12" in_port="mem_512x64_dp.data_out" out_port="memory.data_out"/>
-          </direct>
-          <direct name="clk" input="memory.clk" output="mem_512x64_dp.clk">
           </direct>
         </interconnect>
       </mode>

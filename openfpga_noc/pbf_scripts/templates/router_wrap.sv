@@ -37,7 +37,7 @@ parameter ROUTE_WIDTH=3,
 
 parameter NUM_PIPELINE = 0
 ) (
-    input   wire    clk_noc,
+    input   wire    noc_clk,
     input   wire    clk_usr,
     input   wire    rst_n,
 
@@ -58,7 +58,7 @@ parameter NUM_PIPELINE = 0
     output  logic   [0:NUM_PORTS - 2]                        is_tail_out ,
     output  logic   [0:NUM_PORTS - 2]                        send_out    ,
     input   wire    [0:NUM_PORTS - 2]                        credit_in   ,
-    input   bit     [0:NUM_PORTS-2][0:NUM_PORTS-1]           DISABLE_TURNS ,
+    // input   bit     [0:NUM_PORTS-2][0:NUM_PORTS-1]           DISABLE_TURNS ,
 
 
 

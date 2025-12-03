@@ -55,3 +55,28 @@ module multiply (
 );
     assign out = a * b;
 endmodule
+
+
+            // <input name="reset" num_pins="1"/>
+            // <input name="a" num_pins="18"/>
+            // <input name="b" num_pins="19"/>
+            // <output name="out" num_pins="37"/>
+            // <clock name="clk" num_pins="1"/>
+
+module mac_int_18x19(
+    input wire clk,
+    input wire reset,
+    input wire [17:0] a,
+    input wire [18:0] b,
+    output reg [36:0] out
+);
+
+    always @(posedge clk or posedge reset) begin
+        if (reset) begin
+            out <= 37'd0;
+        end else begin
+            out <= a * b;
+        end
+    end
+
+endmodule

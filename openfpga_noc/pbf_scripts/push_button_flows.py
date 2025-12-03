@@ -9,12 +9,19 @@ from noc_files_generator import gen_router_rtl, gen_noc_bench
 
 
 # Function to parse command line arguments
+# def parse_args():
+#     parser = argparse.ArgumentParser(description="Process YAML configuration for OpenFPGA NoC.")
+#     parser.add_argument("--config", '-c', type=str, required=True, help="Path to the YAML configuration file")
+#     parser.add_argument("--task_dir", '-t', type=str, required=True, help="Directory for the task")
+#     return parser.parse_args()
 def parse_args():
     parser = argparse.ArgumentParser(description="Process YAML configuration for OpenFPGA NoC.")
     parser.add_argument("--config", '-c', type=str, required=True, help="Path to the YAML configuration file")
     parser.add_argument("--task_dir", '-t', type=str, required=True, help="Directory for the task")
-    return parser.parse_args()
-
+    args = parser.parse_args()
+    args.config = os.path.abspath(args.config)
+    args.task_dir = os.path.abspath(args.task_dir)
+    return args
 
 # def create_pbf_dir(task_dir):
 #     # creates a main push button flow dir:
@@ -26,6 +33,7 @@ def create_collateral_dir(task_dir, yaml_config):
     if not os.path.exists(collateral_dir):
         os.makedirs(collateral_dir)
     arch_dir = os.path.join(collateral_dir, "arch")
+    print(arch_dir)
     if not os.path.exists(arch_dir):
         os.makedirs(arch_dir)
     fabric_collateral = os.path.join(collateral_dir, "fabric_collateral")
@@ -38,6 +46,8 @@ def create_collateral_dir(task_dir, yaml_config):
     if not os.path.exists(router_models):
         os.makedirs(router_models)
 
+    print(f"Collateral directories created at: {collateral_dir}")
+    print("----------------------------")
     rtr_wrap_template = os.path.join(os.getenv('OPENFPGA_PATH'), "openfpga_noc/pbf_scripts/templates/router_wrap.sv")
     rtr_wrap_blackbox_template = os.path.join(os.getenv('OPENFPGA_PATH'), "openfpga_noc/pbf_scripts/templates/router_wrap_cell_sim.sv")
 
@@ -76,6 +86,10 @@ def create_collateral_dir(task_dir, yaml_config):
         openfpga_baseline, # openfpga_arch
         is_noc=True # is_noc
     )
+
+# def generate_arch_files(yosys_path, verilog_file, spice_file, top, output_dir, vpr_arch, openfpga_arch, is_noc):
+
+
     print(f"Architecture files generated at: {collateral_dir}")
     print(f"VPR architecture file created at: {vpr_arch_file}")
     print(f"OpenFPGA architecture file created at: {openfpga_arch_file}") 
@@ -98,9 +112,11 @@ def create_fabric_gen_dir(task_dir, yaml_config):
         # def gen_task_config(config_file, OPENFPGA_PATH, shell_script, openfpga_arch, vpr_arch, bench, bench_top):
     fabric_gen_bench_template = os.path.join(os.getenv('OPENFPGA_PATH'), "openfpga_noc/pbf_scripts/templates/noc_bench.v")
     fabric_gen_bench = os.path.join(fabric_gen_dir, "noc_bench.v")
+
+    router_blackbox = os.path.join(task_dir, "collateral/router_models/router_wrap_blackbox.sv")
 # def gen_noc_bench(template, bench, dataw=128, destw=4):
     gen_noc_bench(fabric_gen_bench_template, fabric_gen_bench, yaml_config["fabric_gen_config"]["router"]["interface_width"], yaml_config["fabric_gen_config"]["NoC"]["num_routers"].bit_length())
-    gen_task_config(fabric_gen_config_file, os.getenv("OPENFPGA_PATH"), fabric_gen_shell_script, openfpga_arch_file, vpr_arch_file, fabric_gen_bench, "noc_bench_top")
+    gen_task_config(fabric_gen_config_file, os.getenv("OPENFPGA_PATH"), fabric_gen_shell_script, openfpga_arch_file, vpr_arch_file, fabric_gen_bench, "noc_bench_top", router_blackbox)
 
     print(f"Fabric generation config file created at: {fabric_gen_config_file}")
 
@@ -119,8 +135,10 @@ def create_bitstream_gen_dir(task_dir, yaml_config):
         os.makedirs(os.path.join(bitstream_gen_dir, "config"))
     # create the bitstream gen task config file
     bitstream_gen_config_file = os.path.join(bitstream_gen_dir, "config/task.conf")
+
+    router_blackbox = os.path.join(task_dir, "collateral/router_models/router_wrap_blackbox.sv")
     # gen_bitstream_task_config(bitstream_gen_config_file, yaml_config["bitstream_gen_config"])
-    gen_task_config(bitstream_gen_config_file, os.getenv("OPENFPGA_PATH"), bitstream_gen_shell_script, openfpga_arch_file, vpr_arch_file, bench, bench_top)
+    gen_task_config(bitstream_gen_config_file, os.getenv("OPENFPGA_PATH"), bitstream_gen_shell_script, openfpga_arch_file, vpr_arch_file, bench, bench_top, router_blackbox)
 
     print(f"Bitstream generation config file created at: {bitstream_gen_config_file}")
 
@@ -137,6 +155,7 @@ def main(args):
     print(yaml_config["bitstream_gen_config"]["noc"]["noc_freq_factor"])
 
     task_dir = args.task_dir
+    print(f"Task directory: {task_dir}")
     if not os.path.exists(task_dir):
         os.makedirs(task_dir)
 

@@ -3,7 +3,9 @@
 vpr ${VPR_ARCH_FILE} ${VPR_TESTBENCH_BLIF} \
     --device ${OPENFPGA_VPR_DEVICE_LAYOUT} \
     --echo_file on  --route_chan_width 300 --timing_report_detail aggregated \
-    --sdc_file /mnt/vault1/mfaroo19/OpenFPGA/openfpga-test-runs/001-shashank-router-tasks/scripts/clk_file.sdc --read_vpr_constraints /mnt/vault1/rsunketa/OpenFPGA/openfpga_noc/pbf_scripts/test/constraints.xml
+    --sdc_file /mnt/vault1/mfaroo19/OpenFPGA/openfpga-test-runs/001-shashank-router-tasks/scripts/clk_file.sdc 
+    
+#--read_vpr_constraints /mnt/vault1/rsunketa/OpenFPGA/openfpga_noc/pbf_scripts/test/constraints.xml
 #\
 #    --write_rr_graph ${TASK_DIR}/../collateral/vpr_collateral/rr_graph.bin --write_router_lookahead ${TASK_DIR}/../collateral/vpr_collateral/router_lookahead.bin --write_placement_delay_lookup ${TASK_DIR}/../collateral/vpr_collateral/placement_delay_lookup.bin 
 

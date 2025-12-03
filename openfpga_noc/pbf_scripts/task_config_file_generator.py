@@ -14,7 +14,7 @@ import os
 
 
 
-def gen_task_config(config_file, OPENFPGA_PATH, shell_script, openfpga_arch, vpr_arch, bench, bench_top):
+def gen_task_config(config_file, OPENFPGA_PATH, shell_script, openfpga_arch, vpr_arch, bench, bench_top, router_blackbox):
     with open(config_file, 'w') as f:
         f.write("# Fabric generation configuration file\n")
         f.write("# = = = = = = = = = = = = = = = = = = =\n")
@@ -59,6 +59,7 @@ def gen_task_config(config_file, OPENFPGA_PATH, shell_script, openfpga_arch, vpr
         f.write(f"bench0_top = {bench_top}\n")
         f.write(f"bench0_yosys = {OPENFPGA_PATH}/openfpga-test-runs/001-shashank-router-tasks/scripts/complete_ys_tmpl.ys\n")
         f.write(f"bench_read_verilog_options_common = -nolatches\n")
+        f.write(f"bench_router_blackbox_verilog_common={router_blackbox}\n")
 
         f.write(f"bench_yosys_cell_sim_verilog_common=/mnt/vault1/rsunketa/OpenFPGA/openfpga_flow/openfpga_yosys_techlib/k6_frac_N10_tileable_adder_chain_dpram8K_dsp36_fracff_40nm_cell_sim.v\n")
         f.write(f"bench_yosys_dff_map_verilog_common={OPENFPGA_PATH}/openfpga_flow/openfpga_yosys_techlib/k6_frac_N10_tileable_adder_chain_dpram8K_dsp36_fracff_40nm_dff_map.v\n")
