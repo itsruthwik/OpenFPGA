@@ -10,6 +10,7 @@
 #include "pb_type_annotation.h"
 #include "technology_library.h"
 #include "tile_annotation.h"
+#include "noc_annotation.h"
 
 /* namespace openfpga begins */
 namespace openfpga {
@@ -61,6 +62,10 @@ struct Arch {
    * Bind from physical to circuit model
    */
   std::vector<PbTypeAnnotation> pb_type_annotations;
+
+  /* NoC annotation */
+  NocAnnotation noc_annotation;
+
 };
 
 }  // namespace openfpga

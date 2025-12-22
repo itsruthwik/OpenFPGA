@@ -21,6 +21,7 @@
 #include "read_xml_config_protocol.h"
 #include "read_xml_openfpga_arch.h"
 #include "read_xml_pb_type_annotation.h"
+#include "read_xml_noc_annotation.h"
 #include "read_xml_routing_circuit.h"
 #include "read_xml_simulation_setting.h"
 #include "read_xml_technology_library.h"
@@ -118,6 +119,10 @@ openfpga::Arch read_xml_openfpga_arch(const char* arch_file_name) {
     /* Parse the pb_type annotation */
     openfpga_arch.pb_type_annotations =
       read_xml_pb_type_annotations(xml_openfpga_arch, loc_data);
+    
+      /* Parse NoC annotations */
+    openfpga_arch.noc_annotation =
+      read_xml_noc_annotation(xml_openfpga_arch, loc_data);
 
   } catch (pugiutil::XmlError& e) {
     archfpga_throw(arch_file_name, e.line(), "%s", e.what());
